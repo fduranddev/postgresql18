@@ -1,3 +1,0 @@
-/mnt/c/Postgresql18/csharp/NpgsqlDemo/bin/Release/net8.0/win-x64/publish/NpgsqlDemo.pdb
-/mnt/c/Postgresql18/csharp/NpgsqlDemo/bin/Release/net8.0/win-x64/publish/appsettings.json
-/mnt/c/Postgresql18/csharp/NpgsqlDemo/bin/Release/net8.0/win-x64/publish/NpgsqlDemo.exe
