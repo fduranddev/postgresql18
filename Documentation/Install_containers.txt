@@ -1,0 +1,104 @@
+podman run -d --name pg18_a -p 5433:5433 \
+    -e POSTGRES_PASSWORD=admin \
+    -e POSTGRES_USER=postgres \
+    docker.io/rockylinux/rockylinux:latest \
+    /usr/pgsql-18/bin/postgres -D /var/lib/pgsql/18/data
+
+
+
+
+
+
+
+
+
+podman exec -it pg18_a /bin/bash 
+podman exec -it pg18_b /bin/bash 
+
+🪜 1. Activer le dépôt officiel PostgreSQL 18
+
+dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+
+
+🪜 2. Désactiver le module PostgreSQL par défaut de Rocky Linux
+
+dnf -qy module disable postgresql
+
+🪜 3. Installer PostgreSQL 18
+
+dnf install -y postgresql18-server postgresql18
+
+
+========================================================================
+
+🪜 1. Devenir l’utilisateur postgres
+
+su - postgres
+
+🪜 2. Initialiser le cluster à la main
+
+/usr/pgsql-18/bin/initdb -D /var/lib/pgsql/18/data
+
+🪜 3. Démarrer PostgreSQL
+Toujours en tant que postgres :
+
+/usr/pgsql-18/bin/pg_ctl -D /var/lib/pgsql/18/data -l logfile start
+
+🪜 4. Vérifier le statut
+
+/usr/pgsql-18/bin/pg_ctl -D /var/lib/pgsql/18/data status
+
+🪜 5. Tester la connexion
+
+/usr/pgsql-18/bin/psql
+
+
+🪜 6. (Optionnel) Arrêter proprement
+
+/usr/pgsql-18/bin/pg_ctl -D /var/lib/pgsql/18/data stop
+
+
+6.1: Container pg18_a
+
+podman exec -it -u root pg18_a bash
+
+dnf install net-tools -y
+
+dnf install passwd -y   ---> passwd postgres ----> admin
+
+vi +/listen_addresses /var/lib/pgsql/18/data/postgresql.conf
+
+#listen_addresses = 'localhost' -----> listen_addresses = '*'
+#port = 5432 -----> port = 5433
+
+vi /var/lib/pgsql/18/data/pg_hba.conf
+# autoriser tout le réseau Podman
+host    all     all     0.0.0.0/0     trust
+
+podman stop pg18_a
+podman start pg18_a
+
+podman exec -it pg18_a bash
+
+psql -h pg18_a -p 5433 -U postgres 
+create database db_a;
+\c db_a
+
+psql -h pg18_b -p 5434 -U postgres 
+create database db_b;
+\c db_b
+
+🧩 Étapes pour corriger et démarrer PostgreSQL dans le conteneur
+1️. Vérifier et créer le dossier de log
+
+su - postgres
+cd /var/lib/pgsql/18/data
+mkdir -p log
+chmod 700 log
+
+2️. Vérifier que le répertoire de données appartient à postgres
+chown -R postgres:postgres /var/lib/pgsql/18/data
+chmod 700 /var/lib/pgsql/18/data
+
+3️. Rediriger le log vers un fichier simple
+/usr/pgsql-18/bin/pg_ctl -D /var/lib/pgsql/18/data -l /var/lib/pgsql/18/data/postgres.log start

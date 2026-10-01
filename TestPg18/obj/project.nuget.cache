@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "lBcchkJdbZ8=",
+  "success": true,
+  "projectFilePath": "/mnt/c/Postgresql18/TestPg18/TestPg18.csproj",
+  "expectedPackageFiles": [
+    "/home/durandf/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/9.0.0/microsoft.extensions.dependencyinjection.abstractions.9.0.0.nupkg.sha512",
+    "/home/durandf/.nuget/packages/microsoft.extensions.logging.abstractions/9.0.0/microsoft.extensions.logging.abstractions.9.0.0.nupkg.sha512",
+    "/home/durandf/.nuget/packages/npgsql/10.0.0/npgsql.10.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,489 @@
+sudo podman run -d \
+  --name pg18 \
+  -e POSTGRES_PASSWORD=postgres \
+  -v /mnt/c/Postgresql18/podman/data:/var/lib/postgresql/data \
+  -p 5432:5432 \
+  docker.io/library/postgres:18
+
+
+
+podman pull docker.io/rockylinux/rockylinux
+
+podman run rockylinux /bin/echo "Welcome to the Podman World"
+
+podman run -it --name pg18manual rockylinux:latest bash
+
+podman start -ai pg18manual
+
+
+1️. Mettre à jour DNF:
+dnf update -y
+
+2. Installer le dépôt PostgreSQL officiel
+dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+
+3. Désactiver le module PostgreSQL par défaut
+dnf -qy module disable postgresql
+
+4️. Installer PostgreSQL 18
+dnf install -y postgresql18-server postgresql18
+
+
+5. Ajouter /usr/pgsql-18/bin au PATH de façon permanente
+
+echo 'export PATH=/usr/pgsql-18/bin:$PATH' >> ~/.bashrc
+source ~/.bashrc
+
+
+56. Vérifier l’installation
+which initdb
+# Exemple attendu : /usr/pgsql-18/bin/initdb
+
+dnf install vim
+dnf install -y procps
+
+seradd -m postgres
+
+mkdir -p /data/pg18
+chown postgres:postgres /data/pg18
+
+dnf install -y glibc-langpack-fr
+
+su - postgres -c "/usr/pgsql-18/bin/initdb -D /data/pg18 --encoding=UTF8 --locale=C.UTF-8"
+
+
+su - postgres -c "/usr/pgsql-18/bin/pg_ctl -D /data/pg18 -l logfile start"
+
+
+ps aux | grep postgres
+
+ ps aux | grep postgres
+postgres    1356  0.4  0.3 306416 28672 ?        Ss   09:45   0:00 /usr/pgsql-18/bin/postgres -D /data/pg18
+postgres    1357  0.0  0.0 150896  6232 ?        Ss   09:45   0:00 postgres: logger
+postgres    1358  0.0  0.0 306556  7016 ?        Ss   09:45   0:00 postgres: io worker 0
+postgres    1359  0.0  0.0 306556  6632 ?        Ss   09:45   0:00 postgres: io worker 1
+postgres    1360  0.0  0.0 306556  6632 ?        Ss   09:45   0:00 postgres: io worker 2
+postgres    1361  0.0  0.0 306556  6632 ?        Ss   09:45   0:00 postgres: checkpointer
+postgres    1362  0.0  0.0 306556  6632 ?        Ss   09:45   0:00 postgres: background writer
+postgres    1364  0.0  0.0 306556  6632 ?        Ss   09:45   0:00 postgres: walwriter
+postgres    1365  0.0  0.1 308004  9832 ?        Ss   09:45   0:00 postgres: autovacuum launcher
+postgres    1366  0.0  0.1 307868  9320 ?        Ss   09:45   0:00 postgres: logical replication launcher
+root        1368  0.0  0.0  16480  2176 pts/0    S+   09:45   0:00 grep --color=auto postgres
+
+1. Processus principal:
+
+/usr/pgsql-18/bin/postgres -D /data/pg18
+
+* C’est le serveur PostgreSQL lui-même, qui lit les fichiers de données dans /data/pg18.
+
+2. Processus secondaires (workers et background):
+
+* logger → gère les logs
+* checkpointer → écrit régulièrement les données sur le disque
+* background writer → optimise l’écriture des pages modifiées
+* walwriter → écrit les journaux WAL
+* autovacuum launcher → gère le nettoyage automatique
+* logical replication launcher → pour la réplication logique
+* io worker → gestion des entrées/sorties
+
+3. Le grep
+
+root 1368  0.0  0.0  16480  2176 pts/0    S+   09:45   0:00 grep --color=auto postgres
+
+* C’est juste la commande que tu viens de lancer pour chercher postgres. 
+
+4. Vérification simple de la base
+
+su - postgres
+
+psql
+
+postgres=#
+
+\l
+
+================================================================================================================================================
+
+1. Création du fichier `dockerfile`
+
+# Dockerfile pour PostgreSQL 18 sur Rocky Linux
+FROM docker.io/rockylinux/rockylinux:latest
+
+# Mainteneur
+LABEL maintainer="fdurand2015@gmail.com"
+
+# Installer les utilitaires de base et PostgreSQL 18
+RUN dnf -y update && \
+    dnf -y install wget dnf-utils epel-release sudo && \
+    dnf -y install https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm && \
+    dnf -qy module disable postgresql && \
+    dnf -y install postgresql18 postgresql18-server postgresql18-contrib && \
+    dnf clean all
+
+# Créer l'utilisateur postgres et le répertoire de données
+RUN mkdir -p /var/lib/pgsql/18/data && \
+    chown -R postgres:postgres /var/lib/pgsql && \
+    chmod 700 /var/lib/pgsql/18/data
+
+# Copie du script d'initialisation
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Exposer le port PostgreSQL
+EXPOSE 5432
+
+# Définir l'utilisateur par défaut
+USER postgres
+
+# Commande de démarrage
+ENTRYPOINT ["/entrypoint.sh"]
+
+==============================================================================================
+entrypoint.sh
+
+#!/bin/bash
+DATA_DIR="/var/lib/pgsql/18/data"
+
+# Initialiser la base si nécessaire
+if [ ! -f "$DATA_DIR/PG_VERSION" ]; then
+    /usr/pgsql-18/bin/initdb -D "$DATA_DIR"
+fi
+
+# Configurer PostgreSQL pour écouter toutes les interfaces
+sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/g" $DATA_DIR/postgresql.conf
+sed -i "s/#port = 5432/port = 5432/g" $DATA_DIR/postgresql.conf
+
+# Autoriser toutes les connexions TCP
+echo "host all all 0.0.0.0/0 trust" >> $DATA_DIR/pg_hba.conf
+
+# Démarrer PostgreSQL au premier plan (PID 1)
+exec /usr/pgsql-18/bin/postgres -D "$DATA_DIR"
+
+
+
+
+===============================================================================================
+
+2. Construire l'image Podman:
+
+sudo podman build -t pg18_fr .
+podman build -t pg18_fr:latest .
+
+podman tag ba6a6d21ca45 pg18_fr:latest
+
+=======================================================================================
+
+3. Créer un volume persistant pour les données
+
+podman volume create pg18_fr_data
+
+==================================================================================================
+
+
+4. Lancer les conteneurs 
+
+ÉTAPE 1 — Créer le réseau interne Podman
+
+podman network rm -f pgnet
+
+sudo podman network create pgnet --subnet 10.10.0.0/24
+
+sudo podman network inspect pgnet
+"subnet": "10.10.0.0/24",
+"gateway": "10.10.0.1"
+
+
+ÉTAPE 2 — Créer le volume pour chaque instance
+
+Chaque instance doit avoir son propre volume :
+
+podman volume create pg18_a_data
+podman volume create pg18_b_data
+podman volume create pg18_c_data
+
+Instance A:
+
+podman run -dt --name pg18_a \
+  --network pgnet --ip 10.10.0.10 \
+  -e POSTGRES_PASSWORD=admin \
+  -e POSTGRES_USER=postgres \
+  -p 5433:5433 \
+  rockylinux:latest 
+
+sudo podman run -dt --name pg18_a \
+  --network pgnet \
+  -e POSTGRES_PASSWORD=admin \
+  -e POSTGRES_USER=postgres \
+  -p 5433:5432 \
+  postgres:18
+
+
+
+podman run -d --name pg18_a -p 5433:5432 pg18_fr:latest
+
+sudo podman run -d --name pg18_a -p 5433:5432 localhost/pg18_fr:latest
+  
+   pg18_fr:latest
+podman inspect -f '{{.Name}} {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' pg18_a
+pg18_a 10.10.0.10
+
+
+
+Instance B:
+
+podman run -dt --name pg18_b \
+  --network pgnet --ip 10.10.0.11 \
+  -p 5434:5434 \
+  rockylinux:latest 
+   
+ sudo podman run -d --name pg18_b -p 5434:5432 pg18_fr:latest
+   
+   
+   rockylinux:latest 
+
+podman inspect -f '{{.Name}} {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' pg18_b
+pg18_b 10.10.0.11
+
+Instance C:
+
+podman run -dt --name pg18_c \
+  --network pgnet --ip 10.10.0.12 \
+  -e POSTGRES_PASSWORD=admin \
+  -e POSTGRES_USER=postgres \
+  -p 5435:5435 \
+   rockylinux:latest 
+   
+ sudo podman run -d --name pg18_c -p 5435:5432 pg18_fr:latest
+
+podman inspect -f '{{.Name}} {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' pg18_c
+pg18_c 10.10.0.12
+
+   
+* -d → détaché (arrière-plan)
+* -v pg18_a_data:/data/pg18 → volume persistant
+* -p 5433:5432 → exposer le port sur l’hôte Windows (WSL2) 
+
+==============================================================================================================
+
+5️. Vérifier que PostgreSQL tourne
+
+podman ps
+podman exec -it pg18_a ps aux | grep postgres
+podman exec -it pg18_b ps aux | grep postgres
+podman exec -it pg18_c ps aux | grep postgres
+
+Tu devrais voir le processus principal et les workers (checkpointer, walwriter, etc.).
+
+=====================================================================================================================
+
+6. Se connecter à PostgreSQL
+
+
+6.1: Container pg18_a
+
+podman exec -it -u root pg18_a bash
+
+dnf install passwd -y   ---> passwd postgres ----> admin
+
+
+vi +/listen_addresses /data/pg18/postgresql.conf
+
+#listen_addresses = 'localhost' -----> listen_addresses = '*'
+#port = 5432 -----> port = 5433
+
+vi /data/pg18/pg_hba.conf
+# autoriser tout le réseau Podman
+host    all     all     0.0.0.0/0     trust
+
+podman stop pg18_a
+podman start pg18_a
+
+podman exec -it pg18_a bash
+
+psql -h pg18_a -p 5433 -U postgres 
+create database db_a;
+\c db_a
+
+---------------------------------------------------------------------------------------------------
+6.2: Container pg18_b
+
+podman exec -it -u root pg18_b bash
+
+dnf install passwd -y   ---> passwd postgres ----> admin
+
+
+vi +/listen_addresses /data/pg18/postgresql.conf
+
+#listen_addresses = 'localhost' -----> listen_addresses = '*'
+#port = 5432 -----> port = 5434
+
+vi /data/pg18/pg_hba.conf
+# autoriser tout le réseau Podman
+host    all     all     0.0.0.0/0     trust
+
+podman stop pg18_b
+podman start pg18_b
+
+podman exec -it pg18_b bash
+
+psql -h pg18_b -p 5434 -U postgres 
+create database db_b;
+\c db_b
+
+
+---------------------------------------------------------------------------------------------------
+6.3: Container pg18_c
+
+podman exec -it -u root pg18_c bash
+podman exec -it pg18_c bash
+
+vi +/listen_addresses /var/lib/postgresql/18/docker/postgresql.conf
+
+#listen_addresses = 'localhost' -----> listen_addresses = '*'
+#port = 5432 -----> port = 5435
+
+vi /data/pg18/pg_hba.conf
+
+# autoriser tout le réseau Podman
+host    all     all     0.0.0.0/0     trust
+
+podman stop pg18_c
+podman start pg18_c
+
+
+podman exec -it pg18_c bash
+psql -h pg18_c -p 5435 -U postgres 
+create database db_c;
+\c db_c
+
+
+---------------------------------------------------------------------------------------------------
+
+podman exec -it pg18_a bash
+psql -h pg18_a -p 5433 -U postgres -d db_a
+
+CREATE EXTENSION IF NOT EXISTS dblink;
+
+SELECT dblink_connect(
+    'conn_b',
+    'host=pg18_b port=5434 dbname=db_b user=postgres password=admin'
+);
+
+SELECT dblink_connect(
+    'conn_b_dvdrental',
+    'host=pg18_b port=5434 dbname=dvdrental user=postgres password=admin'
+);
+
+
+SELECT *
+FROM dblink(
+  'conn_b_dvdrental',
+  'SELECT actor_id, first_name, last_name, last_update FROM actor'
+) AS remote_actor(
+  actor_id INT,
+  first_name TEXT,
+  last_name TEXT,
+  last_update TIMESTAMP
+  );
+
+
+SELECT dblink_disconnect('conn_b_dvdrental');
+
+
+
+ dblink_connect
+----------------
+ OK
+ 
+(1 row)
+
+SELECT *
+FROM dblink(
+    'conn_b',
+    'SELECT current_database(), current_user;'
+) AS t(dbname text, "user" text);
+
+
+SELECT *
+FROM dblink(
+	'conn_b',
+	'SELECT table_name FROM information_schema.tables WHERE table_schema = ''public''')
+AS remote_tables(table_name TEXT);
+
+
+
+
+---------------------------------------------------------------------------------------------------
+
+podman exec -it pg18_b bash
+psql -h pg18_b -p 5434 -U postgres -d db_b
+
+CREATE EXTENSION IF NOT EXISTS dblink;
+
+SELECT dblink_connect(
+    'conn_a',
+    'host=pg18_a port=5433 dbname=db_a user=postgres password=admin'
+);
+
+SELECT *
+FROM dblink(
+    'conn_a',
+    'SELECT current_database(), current_user;'
+) AS t(dbname text, "user" text);
+
+
+---------------------------------------------------------------------------------------------------
+
+podman exec -it pg18_c bash
+psql -h pg18_c -p 5435 -U postgres -d db_c
+
+CREATE EXTENSION IF NOT EXISTS dblink;
+
+SELECT dblink_connect(
+    'conn_a',
+    'host=pg18_a port=5433 dbname=db_a user=postgres password=admin'
+);
+
+SELECT *
+FROM dblink(
+    'conn_a',
+    'SELECT current_database(), current_user;'
+) AS t(dbname text, "user" text);
+
+
+
+---------------------------------------------------------------------------------------------------------
+
+SELECT dblink_disconnect('conn_a);
+
+
+
+
+
+💡 Résumé rapide :
+
+* listen_addresses = '*' → écoute sur toutes les interfaces.
+
+* pg_hba.conf → autorise les connexions depuis le réseau Podman.
+
+* port=5434 → préciser le port dans dblink_connect.
+
+Utiliser le nom du conteneur pg18_b comme host
+
+podman run -d \
+  --name pg18_a \
+  -p 5432:5432 \
+  -v /home/durandf/pg_data:/var/lib/postgresql/data \
+  -e POSTGRES_PASSWORD=admin \
+  postgres:18
+
+
+
+
+
+podman run -d \
+  --name pg18_a \
+  -p 5432:5432 \
+  -v pg_data:/var/lib/postgresql/data \
+  -e POSTGRES_PASSWORD=admin \
+  postgres:18

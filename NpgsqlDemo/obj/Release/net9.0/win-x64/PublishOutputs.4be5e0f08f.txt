@@ -1,0 +1,8 @@
+/mnt/c/Postgresql18/NpgsqlDemo/bin/Release/net9.0/win-x64/publish/NpgsqlDemo.exe
+/mnt/c/Postgresql18/NpgsqlDemo/bin/Release/net9.0/win-x64/publish/NpgsqlDemo.dll
+/mnt/c/Postgresql18/NpgsqlDemo/bin/Release/net9.0/win-x64/publish/NpgsqlDemo.deps.json
+/mnt/c/Postgresql18/NpgsqlDemo/bin/Release/net9.0/win-x64/publish/NpgsqlDemo.runtimeconfig.json
+/mnt/c/Postgresql18/NpgsqlDemo/bin/Release/net9.0/win-x64/publish/NpgsqlDemo.pdb
+/mnt/c/Postgresql18/NpgsqlDemo/bin/Release/net9.0/win-x64/publish/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+/mnt/c/Postgresql18/NpgsqlDemo/bin/Release/net9.0/win-x64/publish/Microsoft.Extensions.Logging.Abstractions.dll
+/mnt/c/Postgresql18/NpgsqlDemo/bin/Release/net9.0/win-x64/publish/Npgsql.dll

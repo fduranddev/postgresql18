@@ -1,0 +1,208 @@
+  
+psql -h 10.255.255.254 -U postgres -p 5433
+  
+CREATE EXTENSION IF NOT EXISTS postgres_fdw;  
+ 
+\dx
+
+--Créer le serveur distant
+
+CREATE SERVER dvdrental_pg18_b
+FOREIGN DATA WRAPPER postgres_fdw
+OPTIONS (host '10.10.0.11', port '5432', dbname 'dvdrental');
+
+-- Créer l’utilisateur mapping
+
+CREATE USER MAPPING FOR postgres
+SERVER dvdrental_pg18_b
+OPTIONS (user 'postgres', password 'admin');
+
+-- Importer toutes les tables distantes
+
+ERROR:  type "public.year" does not exist
+LINE 5:   release_year public.year OPTIONS (column_name 'release_yea...
+                       ^
+QUERY:  CREATE FOREIGN TABLE film (
+  film_id integer OPTIONS (column_name 'film_id') NOT NULL,
+  title character varying(255) OPTIONS (column_name 'title') COLLATE pg_catalog."default" NOT NULL,
+  description text OPTIONS (column_name 'description') COLLATE pg_catalog."default",
+  release_year public.year OPTIONS (column_name 'release_year'),
+  language_id smallint OPTIONS (column_name 'language_id') NOT NULL,
+  rental_duration smallint OPTIONS (column_name 'rental_duration') NOT NULL,
+  rental_rate numeric(4,2) OPTIONS (column_name 'rental_rate') NOT NULL,
+  length smallint OPTIONS (column_name 'length'),
+  replacement_cost numeric(5,2) OPTIONS (column_name 'replacement_cost') NOT NULL,
+  rating public.mpaa_rating OPTIONS (column_name 'rating'),
+  last_update timestamp without time zone OPTIONS (column_name 'last_update') NOT NULL,
+  special_features text[] OPTIONS (column_name 'special_features') COLLATE pg_catalog."default",
+  fulltext tsvector OPTIONS (column_name 'fulltext') NOT NULL
+) SERVER dvdrental_pg18_b
+OPTIONS (schema_name 'public', table_name 'film');
+CONTEXT:  importing foreign table "film"
+Time: 38.139 m
+
+
+
+
+-- type year (comme smallint)
+CREATE DOMAIN public.year AS smallint
+  CHECK (VALUE >= 1900 AND VALUE <= 2100);
+
+-- type mpaa_rating (enum)
+CREATE TYPE public.mpaa_rating AS ENUM ('G', 'PG', 'PG-13', 'R', 'NC-17');
+
+
+IMPORT FOREIGN SCHEMA public
+FROM SERVER dvdrental_pg18_b
+INTO public;
+
+postgres@postgres=# \d
+                        List of relations
++--------+----------------------------+---------------+----------+
+| Schema |            Name            |     Type      |  Owner   |
++--------+----------------------------+---------------+----------+
+| public | actor                      | foreign table | postgres |
+| public | actor_info                 | foreign table | postgres |
+| public | address                    | foreign table | postgres |
+| public | category                   | foreign table | postgres |
+| public | city                       | foreign table | postgres |
+| public | country                    | foreign table | postgres |
+| public | customer                   | foreign table | postgres |
+| public | customer_list              | foreign table | postgres |
+| public | film                       | foreign table | postgres |
+| public | film_actor                 | foreign table | postgres |
+| public | film_category              | foreign table | postgres |
+| public | film_list                  | foreign table | postgres |
+| public | inventory                  | foreign table | postgres |
+| public | language                   | foreign table | postgres |
+| public | nicer_but_slower_film_list | foreign table | postgres |
+| public | payment                    | foreign table | postgres |
+| public | rental                     | foreign table | postgres |
+| public | sales_by_film_category     | foreign table | postgres |
+| public | sales_by_store             | foreign table | postgres |
+| public | staff                      | foreign table | postgres |
+| public | staff_list                 | foreign table | postgres |
+| public | store                      | foreign table | postgres |
++--------+----------------------------+---------------+----------+
+(22 rows)
+
+
+-- lister les serveurs distants définis
+postgres@postgres=# \des
+               List of foreign servers
++------------------+----------+----------------------+
+|       Name       |  Owner   | Foreign-data wrapper |
++------------------+----------+----------------------+
+| dvdrental_pg18_b | postgres | postgres_fdw         |
++------------------+----------+----------------------+
+(1 row)
+
+-- Lister les users mappings (mappages utilisateurs)
+postgres@postgres=# \dew+
+                                               List of foreign-data wrappers
++--------------+----------+----------------------+------------------------+-------------------+-------------+-------------+
+|     Name     |  Owner   |       Handler        |       Validator        | Access privileges | FDW options | Description |
++--------------+----------+----------------------+------------------------+-------------------+-------------+-------------+
+| postgres_fdw | postgres | postgres_fdw_handler | postgres_fdw_validator |                   |             |             |
++--------------+----------+----------------------+------------------------+-------------------+-------------+-------------+
+(1 row)
+
+-- Lister les foreign tables créées
+postgres@postgres=# \det
+                  List of foreign tables
++--------+----------------------------+------------------+
+| Schema |           Table            |      Server      |
++--------+----------------------------+------------------+
+| public | actor                      | dvdrental_pg18_b |
+| public | actor_info                 | dvdrental_pg18_b |
+| public | address                    | dvdrental_pg18_b |
+| public | category                   | dvdrental_pg18_b |
+| public | city                       | dvdrental_pg18_b |
+| public | country                    | dvdrental_pg18_b |
+| public | customer                   | dvdrental_pg18_b |
+| public | customer_list              | dvdrental_pg18_b |
+| public | film                       | dvdrental_pg18_b |
+| public | film_actor                 | dvdrental_pg18_b |
+| public | film_category              | dvdrental_pg18_b |
+| public | film_list                  | dvdrental_pg18_b |
+| public | inventory                  | dvdrental_pg18_b |
+| public | language                   | dvdrental_pg18_b |
+| public | nicer_but_slower_film_list | dvdrental_pg18_b |
+| public | payment                    | dvdrental_pg18_b |
+| public | rental                     | dvdrental_pg18_b |
+| public | sales_by_film_category     | dvdrental_pg18_b |
+| public | sales_by_store             | dvdrental_pg18_b |
+| public | staff                      | dvdrental_pg18_b |
+| public | staff_list                 | dvdrental_pg18_b |
+| public | store                      | dvdrental_pg18_b |
++--------+----------------------------+------------------+
+(22 rows)
+
+-- Lister les colonnes des foreign tables
+
+postgres@postgres=# \d+ actor
+                                                            Foreign table "public.actor"
++-------------+-----------------------------+-----------+----------+---------+-----------------------------+----------+--------------+-------------+
+|   Column    |            Type             | Collation | Nullable | Default |         FDW options         | Storage  | Stats target | Description |
++-------------+-----------------------------+-----------+----------+---------+-----------------------------+----------+--------------+-------------+
+| actor_id    | integer                     |           | not null |         | (column_name 'actor_id')    | plain    |              |             |
+| first_name  | character varying(45)       |           | not null |         | (column_name 'first_name')  | extended |              |             |
+| last_name   | character varying(45)       |           | not null |         | (column_name 'last_name')   | extended |              |             |
+| last_update | timestamp without time zone |           | not null |         | (column_name 'last_update') | plain    |              |             |
++-------------+-----------------------------+-----------+----------+---------+-----------------------------+----------+--------------+-------------+
+Server: dvdrental_pg18_b
+FDW options: (schema_name 'public', table_name 'actor')
+
+\d+ film
+
+postgres@postgres=# \d+ film
+                                                                 Foreign table "public.film"
++------------------+-----------------------------+-----------+----------+---------+----------------------------------+----------+--------------+-------------+
+|      Column      |            Type             | Collation | Nullable | Default |           FDW options            | Storage  | Stats target | Description |
++------------------+-----------------------------+-----------+----------+---------+----------------------------------+----------+--------------+-------------+
+| film_id          | integer                     |           | not null |         | (column_name 'film_id')          | plain    |              |             |
+| title            | character varying(255)      |           | not null |         | (column_name 'title')            | extended |              |             |
+| description      | text                        |           |          |         | (column_name 'description')      | extended |              |             |
+| release_year     | year                        |           |          |         | (column_name 'release_year')     | plain    |              |             |
+| language_id      | smallint                    |           | not null |         | (column_name 'language_id')      | plain    |              |             |
+| rental_duration  | smallint                    |           | not null |         | (column_name 'rental_duration')  | plain    |              |             |
+| rental_rate      | numeric(4,2)                |           | not null |         | (column_name 'rental_rate')      | main     |              |             |
+| length           | smallint                    |           |          |         | (column_name 'length')           | plain    |              |             |
+| replacement_cost | numeric(5,2)                |           | not null |         | (column_name 'replacement_cost') | main     |              |             |
+| rating           | mpaa_rating                 |           |          |         | (column_name 'rating')           | plain    |              |             |
+| last_update      | timestamp without time zone |           | not null |         | (column_name 'last_update')      | plain    |              |             |
+| special_features | text[]                      |           |          |         | (column_name 'special_features') | extended |              |             |
+| fulltext         | tsvector                    |           | not null |         | (column_name 'fulltext')         | extended |              |             |
++------------------+-----------------------------+-----------+----------+---------+----------------------------------+----------+--------------+-------------+
+Server: dvdrental_pg18_b
+FDW options: (schema_name 'public', table_name 'film')
+
+podman exec -it pg18_a psql -U postgres
+
+postgres=# \det
+                 List of foreign tables
+ Schema |           Table            |      Server
+--------+----------------------------+------------------
+ public | actor                      | dvdrental_pg18_b
+ public | actor_info                 | dvdrental_pg18_b
+ public | address                    | dvdrental_pg18_b
+ public | category                   | dvdrental_pg18_b
+ public | city                       | dvdrental_pg18_b
+ public | country                    | dvdrental_pg18_b
+ public | customer                   | dvdrental_pg18_b
+ public | customer_list              | dvdrental_pg18_b
+ public | film                       | dvdrental_pg18_b
+ public | film_actor                 | dvdrental_pg18_b
+ public | film_category              | dvdrental_pg18_b
+ public | film_list                  | dvdrental_pg18_b
+ public | inventory                  | dvdrental_pg18_b
+ public | language                   | dvdrental_pg18_b
+ public | nicer_but_slower_film_list | dvdrental_pg18_b
+ public | payment                    | dvdrental_pg18_b
+ public | rental                     | dvdrental_pg18_b
+ public | sales_by_film_category     | dvdrental_pg18_b
+ public | sales_by_store             | dvdrental_pg18_b
+ public | staff                      | dvdrental_pg18_b
+ public | staff_list                 | dvdrental_pg18_b
+ public | store                      | dvdrental_pg18_b
+(22 rows)

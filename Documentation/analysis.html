@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>&#x2b50;&#xfe0f;SQL Analysis of DVD Rental Database</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h1 id="️sql-analysis-of-dvd-rental-database">⭐️SQL Analysis of DVD Rental Database</h1>
+<p>The following set of 10 diverse SQL queries provides an in-depth analysis of a DVD rental database. The queries cover various aspects of the business, including customer behaviors, film properties, rental patterns, and staff performance.</p>
+<p>In addition, for a more in-depth view and to facilitate better comprehension, the results of each query are extracted and stored as csv files in the &quot;query&quot; folder. Each file corresponds to the respective query, allowing readers to explore the data in a more familiar format, aiding in data interpretation, and making it easier to generate insights or perform further analysis.</p>
+<br>
+<p><strong>1. SELECT and WHERE</strong></p>
+<pre><code>SELECT first_name, last_name FROM actor WHERE first_name = 'Johnny';
+</code></pre>
+<p>This query retrieves the first and last names of actors whose first name is 'Johnny'. It helps identify actors who share the same first name in the database.</p>
+<br>
+<p><strong>2. INNER JOIN and GROUP BY</strong></p>
+<pre><code>SELECT film.title, COUNT(actor.actor_id) as actor_count
+FROM film
+INNER JOIN film_actor ON film.film_id = film_actor.film_id
+INNER JOIN actor ON actor.actor_id = film_actor.actor_id
+GROUP BY film.title;
+</code></pre>
+<p>This query determines the number of actors in each film. It can provide insights into movies with large or small casts.</p>
+<br>
+<p><strong>3. LEFT JOIN and LIMIT</strong></p>
+<pre><code>SELECT customer.customer_id, customer.first_name, customer.last_name, payment.amount
+FROM customer
+LEFT JOIN payment ON customer.customer_id = payment.customer_id
+ORDER BY payment.amount DESC
+LIMIT 10;
+</code></pre>
+<p>This query identifies the top 10 customers who have made the largest payments. This can be useful in identifying high-spending customers.</p>
+<br>
+<p><strong>4. COUNT, BETWEEN, AND ORDER BY</strong></p>
+<pre><code>SELECT customer_id , count(*) AS Rental_Count
+FROM rental
+WHERE rental_date BETWEEN '2005-07-01' AND '2005-08-31'
+GROUP BY customer_id
+ORDER BY Rental_Count DESC;
+</code></pre>
+<p>This query calculates the number of rentals each customer made during the summer holiday (July and August) of 2005. It can help identify trends or customer habits during holiday periods.</p>
+<br>
+<p><strong>5. DISTINCT, IN</strong></p>
+<pre><code>SELECT DISTINCT customer_id
+FROM rental
+WHERE customer_id IN (SELECT customer_id FROM payment WHERE amount &gt; 10);
+</code></pre>
+<p>This query identifies unique customers who have made payments exceeding 10 units. This can be useful to target customers who regularly make substantial payments.</p>
+<br>
+<p><strong>6. CASE Statement</strong></p>
+<pre><code>SELECT rating, 
+       AVG(length) AS avg_length, 
+       CASE 
+         WHEN AVG(length) &gt; 120 THEN 'Long'
+         ELSE 'Short'
+       END AS film_length_category
+FROM film 
+GROUP BY rating;
+
+</code></pre>
+<p>This query calculates the average length of films for each rating category, and classifies them into 'Long' or 'Short' categories based on whether their average length is greater than 120 minutes. This can be used to categorize films based on their average length and rating.</p>
+<br>
+<p><strong>7. Window Function</strong></p>
+<pre><code>SELECT rental_id, customer_id, rental_date, 
+       RANK() OVER (PARTITION BY customer_id ORDER BY rental_date) as rental_rank
+FROM rental;
+
+</code></pre>
+<p>This query assigns a rank to each rental for a specific customer, based on the rental date. The earliest rental gets the lowest rank. This can be used to understand rental patterns of customers, such as the frequency and timing of their rentals.</p>
+<br>
+<p><strong>8. MIN, MAX, LIKE with Wildcard Characters % and _</strong></p>
+<pre><code>SELECT MIN(length) as min_length, MAX(length) as max_length
+FROM film
+WHERE title LIKE 'A%';
+</code></pre>
+<p>This query determines the shortest and longest films that start with 'A'. This could be useful in understanding the range of film lengths in a certain category.</p>
+<br>
+<p><strong>9. RIGHT JOIN, ORDER BY ASC OR DESC</strong></p>
+<pre><code>SELECT customer.customer_id, customer.first_name, customer.last_name, rental.rental_id
+FROM customer
+RIGHT JOIN rental ON customer.customer_id = rental.customer_id
+ORDER BY rental.rental_date DESC;
+</code></pre>
+<p>This query lists all rentals and, for each rental, the corresponding customer details, sorted by the most recent rental. This helps analyze rental trends and active customers.</p>
+<br>
+<p><strong>10. CROSS JOIN, LIMIT</strong></p>
+<pre><code>SELECT film.title, category.name
+FROM film
+CROSS JOIN category
+LIMIT 100;
+</code></pre>
+<p>This query returns a combination of every film title with every category name, limiting the results to the first 100 records</p>
+
+            
+            
+        </body>
+        </html>

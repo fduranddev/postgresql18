@@ -1,0 +1,5 @@
+telnet 10.10.0.11 5434
+Trying 10.10.0.11...
+telnet: Unable to connect to remote host: Connection refused
+
+Connexion impossible sur un container Podman pg18_b

@@ -1,0 +1,269 @@
+body {
+	margin: 0;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-size: 14px !important;
+	color: #333333;
+	background-color: #ffffff;
+}
+#whleftcol{position: relative;}
+#resizerCol{width:20px; cursor: e-resize;font-size: 0;padding: 0; position: absolute; top:0; right: -10px; height: 100%;}
+
+/* #whsizer{float:left;min-height:100%;top:60px;padding-bottom:50px;position:relative;background-color:#fff;z-index: 2;} */
+#whtoc{position:relative;}
+#whtoc>ul {margin-top: 28px;}
+.tree>ul>.parent_li .parent_li li{display:none;} /*close all tree's grandson nodes instead of js*/
+.tree li, #whtoc li {
+    list-style-type:none;
+    position:relative;
+	white-space: nowrap;
+	margin:0.5rem 0;
+  left:-20px;
+  font-size: 14px;
+}
+.tree li span, #whtoc li span {
+  display:inline-block;
+  text-decoration:none;
+  /* height:19px !important; */
+  width: 18px;
+  left: -20px;
+  position: absolute;
+	width:18px;
+}
+.tree li.parent_li>span, #whtoc li.parent_li>span {
+    cursor:pointer
+}
+
+.current_bold{font-weight:bold;}
+#content{padding:0 15px 0 5px !important;}
+/* anchor offset so it shows title when anchoring to the section */
+.chapter_content {
+  padding-top: 100px;
+  margin-top: -100px;
+}
+/*resizer*/
+#resizerCol{width:20px;min-height:100% !important;cursor: e-resize;font-size: 0;padding: 0;float:left;}
+
+/*Question Feedback Modal*/
+#questionModal input.text{display:inline-block;width:425px;margin-left:5px;}
+#tabs *{-moz-box-sizing:content-box !important; -webkit-box-sizing:content-box !important; box-sizing:content-box !important;}
+
+.whtitle{position: relative;top: 55px;display: block;font-size: 85%;color: gray;margin-left:10px;}
+.whfeedback{float: right;margin-right: 20px;margin-top: 5px;}
+.whfeedback	i {background: url(help.png) -165px -14px no-repeat;height: 17px;width: 17px; display: block;float: left;margin-right: 3px;}
+table:empty{display:none;}
+
+/*new layout*/
+#whtoc li{list-style-type:none;width:200px;}
+/* #whheader{position: fixed; background-color: white; z-index: 90;} */
+#whlogo{z-index:99;position:fixed;}
+#whleftcol+td{padding:70px 5px 10px 10px;}
+/* #whfooter{border:none !important;}
+#whfooter .content{background: url(help.png) repeat-x 0px -45px; height: 100%; border-top: 3px solid gainsboro;} */
+#whtoc>ul{margin-bottom:60px;}
+#whtoc .nav{padding-left:40px;}
+#whtoc .nav>li>a{display:inline-block;padding:0px;}
+#whtoc li.active>a{font-weight:700;}
+#whtoc > ul > li > ul > li {
+  display: block;
+}
+#whtoc > ul > li > ul > li ul {
+  display: none;
+}
+
+#whtitle { margin-left:6px; top:105px;}
+#whiframe {position: static;}
+#whiframe h2 {     margin-bottom:1em;}
+
+.wrapper>.content {	margin-top:40px; }
+#wrapper p+h1, #wrapper a+h1, #wrapper center+h1 { margin-top: 30px;padding-bottom: 10px;}
+.wrapper>.content>h1 { margin-top: -80px; padding-top: 40px; }
+.whtitle {display:none !important;}
+.wrapper>.content img {max-width:600px;}
+/* #whfooter {text-align: center;} */
+/* Fix the horizontal scroll bar issue when resize the page */
+.code .lines, .code .line{
+  word-break: break-word;
+  white-space: normal !important;
+}
+/* fontello arrow icons lib */
+@font-face {
+  font-family: "fontello";
+  src: url("../font/fontello.eot?6037458");
+  src: url("../font/fontello.eot?6037458#iefix") format("embedded-opentype"),
+    url("../font/fontello.svg?6037458#fontello") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "fontello";
+  src: url("fontello.eot") format("embedded-opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "fontello";
+  src: url('data:application/x-font-woff;charset=utf-8;base64,d09GRgABAAAAAAUUAAoAAAAAB/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABPUy8yAAAA9AAAAEkAAABgPkNZJGNtYXAAAAFAAAAAPQAAAUrqaeiTZ2x5ZgAAAYAAAAFBAAAB1KuhSQ1oZWFkAAACxAAAADMAAAA2FdL8RWhoZWEAAAL4AAAAHQAAACQGxgNZaG10eAAAAxgAAAAYAAAAGA/7AFJsb2NhAAADMAAAAA4AAAAOAYIA6m1heHAAAANAAAAAIAAAACAA4gBObmFtZQAAA2AAAAF3AAACzcydHyFwb3N0AAAE2AAAADwAAABQxwAhHnjaY2BhymKcwMDKwMBUxbSHgYGhB0IzPmAwZGQCijKwMjPAgQCCyRCQ5prC4PCC4aU2c9D/LIYo5iCGaUBhRiQlCgwMAF61C/UAAAB42mNgYGBmgGAZBkYGEHAB8hjBfBYGDSDNBqQZGZheML/U/v+fgeEFA4iWYBS7BVUPBIxsDCMeAADJAwnJAAAAeNp9ULFOwzAQPTtSIrWiPY6QDpSgpsYtUgXIpOnIwicwdK66sfEJKFMmJtQBdUR8Q5WpyidUzFXHquoHIBWwnQEkBJZ95/fke/fOwD63AOyWPwACHDQCv87cqCOvWUcOEjVaIa7wEoWYzYRAxe83eI4bRNGbFz2hSxjoxW94aOqZ50YXTMaD5IQNEi3G4zX1aI0ou0XRlchelkRLVChlnkuJChxbn/MhVKEBba2hAt9ttyIZJ1d9G1uW2f/B8yxohv7u1Q+bgTl8aPA3xx7Dbqj3uEwfizKbVtYve+MjOAY41ZLasGcmjs3I2rky1pX5B1aQUJSmpAgxyxCpRIKyOakIJxNLPU/tA40iRVMj78AYnpyU57AHR3Cm+2nb/XKSQ9/1/kHO3Y6qtVqVb038486zesWASv3910W3/wKeF1JiAAAAeNpjYGRgYADi8gvPNsXz23xl4GZ+ARRhuLkwJghG/3/HwMDcwrQHyOVgYAKJAgB/AA0DAHjaY2BkYGAO+p8FJF/8fwckWxiAIiiADQCC2AUmAAAAA+gAAAFU/+4CRAAAArwAAAHWAAAD6ABkAAAAAAAgAEAAeACqAOoAAAABAAAABgAqAAMAAAAAAAIAEgAiAHMAAABTAAAAAAAAeNp1kMtOwkAUhv+RiwqJGk3cOisDMZZL4gISEhIMbHRDDFtTSmlLSodMBxJew3fwYXwJn8WfdjAGYpvpfOebM2dOB8A1viGQP08cOQucMcr5BKfoWS7QP1sukl8sl1DFm+Uy/bvlCh4QWK7iBh+sIIrnjBb4tCxwJS4tn+BC3Fku0D9aLpJ7lku4Fa+Wy/Se5QomIrVcxb34GqjVVkdBaGRtUJftZqsjp1upqKLEjaW7NqHSqezLuUqMH8fK8dRyz2M/WMeu3of7eeLrNFKJbDnNvRr5ia9d48921dNN0DZmLudaLeXQZsiVVgvfM05ozKrbaPw9DwMorLCFRsSrCmEgUaOtc26jiRY6pCkzJDPzrAgJXMQ0LtbcEWYrKeM+x5xRQuszIyY78PhdHvkxKeD+mFX00ephPCHtzogyL9mXw+4Os0akJMt0Mzv77T3Fhqe1aQ137brUWVcSw4MakvexW1vQePROdiuGtosG33/+7wfseIRVAHjaY2BigAAuBmyADQgZGJkYmRlZGFkZ2biKMtMzSnTzC1LzOFPyy/PALJbc1LxStuTEvOTUHAYA2zkL/g==')
+    format("woff"),
+    url("../font/fontello.ttf") format("truetype"),
+    url("../font/fontello.svg#fontello") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+#content table td:not(.nowrap), .content table td:not(.nowrap){
+  white-space: normal !important;
+}
+
+@media screen and (max-width:820px) {
+  #content table td:not(.nowrap), .content table td:not(.nowrap){
+    white-space: pre-wrap !important;
+  }
+}
+
+#whiframe {
+  padding: 18px 30px!important;
+  height: initial;
+  overflow: hidden;
+}
+#whrightcol {
+  overflow-y: auto;
+  position: relative;
+}
+.content {
+  padding: 18px 30px!important;
+}
+/* Fix the horizontal scroll bar issue when resize the page */
+.code .lines, .code .line{
+  word-break: break-word;
+  white-space: normal !important;
+}
+
+/* fontello arrow icons lib */
+@font-face {
+  font-family: "fontello";
+  src: url("../font/fontello.eot?6037458");
+  src: url("../font/fontello.eot?6037458#iefix") format("embedded-opentype"),
+    url("../font/fontello.svg?6037458#fontello") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "fontello";
+  src: url("fontello.eot") format("embedded-opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "fontello";
+  src: url('data:application/x-font-woff;charset=utf-8;base64,d09GRgABAAAAAAUUAAoAAAAAB/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABPUy8yAAAA9AAAAEkAAABgPkNZJGNtYXAAAAFAAAAAPQAAAUrqaeiTZ2x5ZgAAAYAAAAFBAAAB1KuhSQ1oZWFkAAACxAAAADMAAAA2FdL8RWhoZWEAAAL4AAAAHQAAACQGxgNZaG10eAAAAxgAAAAYAAAAGA/7AFJsb2NhAAADMAAAAA4AAAAOAYIA6m1heHAAAANAAAAAIAAAACAA4gBObmFtZQAAA2AAAAF3AAACzcydHyFwb3N0AAAE2AAAADwAAABQxwAhHnjaY2BhymKcwMDKwMBUxbSHgYGhB0IzPmAwZGQCijKwMjPAgQCCyRCQ5prC4PCC4aU2c9D/LIYo5iCGaUBhRiQlCgwMAF61C/UAAAB42mNgYGBmgGAZBkYGEHAB8hjBfBYGDSDNBqQZGZheML/U/v+fgeEFA4iWYBS7BVUPBIxsDCMeAADJAwnJAAAAeNp9ULFOwzAQPTtSIrWiPY6QDpSgpsYtUgXIpOnIwicwdK66sfEJKFMmJtQBdUR8Q5WpyidUzFXHquoHIBWwnQEkBJZ95/fke/fOwD63AOyWPwACHDQCv87cqCOvWUcOEjVaIa7wEoWYzYRAxe83eI4bRNGbFz2hSxjoxW94aOqZ50YXTMaD5IQNEi3G4zX1aI0ou0XRlchelkRLVChlnkuJChxbn/MhVKEBba2hAt9ttyIZJ1d9G1uW2f/B8yxohv7u1Q+bgTl8aPA3xx7Dbqj3uEwfizKbVtYve+MjOAY41ZLasGcmjs3I2rky1pX5B1aQUJSmpAgxyxCpRIKyOakIJxNLPU/tA40iRVMj78AYnpyU57AHR3Cm+2nb/XKSQ9/1/kHO3Y6qtVqVb038486zesWASv3910W3/wKeF1JiAAAAeNpjYGRgYADi8gvPNsXz23xl4GZ+ARRhuLkwJghG/3/HwMDcwrQHyOVgYAKJAgB/AA0DAHjaY2BkYGAO+p8FJF/8fwckWxiAIiiADQCC2AUmAAAAA+gAAAFU/+4CRAAAArwAAAHWAAAD6ABkAAAAAAAgAEAAeACqAOoAAAABAAAABgAqAAMAAAAAAAIAEgAiAHMAAABTAAAAAAAAeNp1kMtOwkAUhv+RiwqJGk3cOisDMZZL4gISEhIMbHRDDFtTSmlLSodMBxJew3fwYXwJn8WfdjAGYpvpfOebM2dOB8A1viGQP08cOQucMcr5BKfoWS7QP1sukl8sl1DFm+Uy/bvlCh4QWK7iBh+sIIrnjBb4tCxwJS4tn+BC3Fku0D9aLpJ7lku4Fa+Wy/Se5QomIrVcxb34GqjVVkdBaGRtUJftZqsjp1upqKLEjaW7NqHSqezLuUqMH8fK8dRyz2M/WMeu3of7eeLrNFKJbDnNvRr5ia9d48921dNN0DZmLudaLeXQZsiVVgvfM05ozKrbaPw9DwMorLCFRsSrCmEgUaOtc26jiRY6pCkzJDPzrAgJXMQ0LtbcEWYrKeM+x5xRQuszIyY78PhdHvkxKeD+mFX00ephPCHtzogyL9mXw+4Os0akJMt0Mzv77T3Fhqe1aQ137brUWVcSw4MakvexW1vQePROdiuGtosG33/+7wfseIRVAHjaY2BigAAuBmyADQgZGJkYmRlZGFkZ2biKMtMzSnTzC1LzOFPyy/PALJbc1LxStuTEvOTUHAYA2zkL/g==')
+    format("woff"),
+    url("../font/fontello.ttf") format("truetype"),
+    url("../font/fontello.svg#fontello") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'fontello';
+    src: url('../font/fontello.svg?6037458#fontello') format('svg');
+  }
+}
+*/
+[class^="icon-"]:before,
+[class*=" icon-"]:before {
+  font-family: "fontello";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: 0.2em;
+  text-align: center; /* opacity: .8; */ /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+  /* fix buttons height, for twitter bootstrap */
+  line-height: 1em; /* Animation center compensation - margins should be symmetric */
+  /* remove if not needed */
+  margin-left: 0.2em;
+  /* you can be more comfortable with increased icons size */
+  /* font-size: 120%; */
+  /* Uncomment for 3D effect */
+  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+.icon-right-open:before {
+  content: "\e800";
+} /* '' */
+.icon-down-open:before {
+  content: "\e801";
+}
+
+/* '' */
+.icon-menu:before {
+  content: "\e92b";
+} /* '' */
+.icon-cancel:before {
+  content: "\e803";
+} /* '' */
+
+.ygtvtp:before {
+  font-family: "fontello";
+  content: "\e800"; }
+
+.ygtvlm:before {
+  font-family: "fontello";
+  content: "\e801"; }
+span.ygtvln.ygtvtp {
+    visibility: hidden;
+}
+
+/* right side toc style */
+.right-table-of-contents {
+  display: none;
+  margin: 60px 20px 0;
+  flex: 1;
+  position: sticky;
+  top: 60px; 
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: calc(100vh - 65px - 40px - 60px);
+}
+  .right-table-of-contents ul, .right-table-of-contents li {
+    list-style: none;
+    padding: 0;
+    margin: 0; }
+  .right-table-of-contents .toc-h1 > a {
+    padding-left: 0.5rem; }
+  .right-table-of-contents .toc-h2 > a {
+    padding-left: 2rem; }
+  .right-table-of-contents .toc-h3 > a {
+    padding-left: 2.5rem; }
+  .right-table-of-contents .toc-h4 > a {
+  	padding-left: 3rem; }
+  .right-table-of-contents .toc-h5 > a {
+  	padding-left: 3.5rem; }
+  .right-table-of-contents .toc-h6 > a {
+  	padding-left: 4rem; }
+  .right-table-of-contents ul > li::before {
+    content: ""; }
+  .right-table-of-contents a {
+    overflow: initial;
+    display: block;
+    padding: 0.3rem;
+    color: #636363;
+    background: none;
+    font-size: 0.85rem;
+    border-left: 4px solid #e8e9ea;
+    white-space: normal; }
+  .right-table-of-contents a:hover {
+    border-left-color: #b9b9b9;
+    color: black; }
+  .right-table-of-contents a.active {
+    border-left-color: #2193d6;
+    color: #1A72B9; } 

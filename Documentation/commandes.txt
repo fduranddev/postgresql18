@@ -1,0 +1,35 @@
+CREATE ROLE elephant
+WITH LOGIN
+PASSWORD 'Tamerlan206#'
+NOSUPERUSER
+NOCREATEDB
+NOCREATEROLE;
+
+
+GRANT CONNECT ON DATABASE Test TO elephant;
+GRANT USAGE ON SCHEMA sales TO elephant;
+
+
+psql "host=127.0.0.1 port=5436 dbname=Test user=elephant password=Tamerlan2026#"
+
+psql -h 127.0.0.1 -p 5436 -U postgres -d Test
+
+GRANT USAGE ON SCHEMA sales TO elephant;
+
+GRANT SELECT, INSERT, UPDATE, DELETE
+ON TABLE sales.products
+TO elephant;
+
+\dp sales.products
+
+elephant=arwd
+
+👉 arwd signifie :
+
+a = INSERT
+r = SELECT
+w = UPDATE
+d = DELETE
+
+
+

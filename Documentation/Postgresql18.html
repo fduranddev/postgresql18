@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>&#x1f4c0; Projet PosgreSQL DVD Rental &#x1f4c0;</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h1 id="-projet-posgresql-dvd-rental-">📀 Projet PosgreSQL DVD Rental 📀</h1>
+<h3 id="table-des-matières">Table des matières</h3>
+<ul>
+<li><a href="#1-connexion-avec-psql">1. Connexion avec psql</a></li>
+<li><a href="#2-mod%C3%A8le-entit%C3%A9s-relations-dvd-rental">2. Modèle Entités-Relations DVD Rental</a></li>
+<li><a href="#3-t%C3%A9l%C3%A9chargement-des-donn%C3%A9es-de-la-base-de-donn%C3%A9es-dvdrental">3. Téléchargement des données de la base de données DVDRENTAL</a></li>
+<li><a href="#4-mod%C3%A8le-er-dvd-rental">4. Modèle ER DVD Rental</a></li>
+<li><a href="#5-cr%C3%A9er-lutilisateur-fdurand-et-acc%C3%A8s-%C3%A0-la-base-dvdrental">5. Créer l'utilisateur fdurand et accès à la base DVDRENTAL</a></li>
+<li><a href="#6-query01">6. Query01</a></li>
+<li><a href="#7-query02">7. Query02</a></li>
+<li><a href="#8-query03">8. Query03</a></li>
+<li><a href="#9-query04">9. Query04</a></li>
+<li><a href="#10-query05">10. Query05</a></li>
+<li><a href="#11-query06">11. Query06</a></li>
+<li><a href="#12-query07">12. Query07</a></li>
+<li><a href="#13-query08">13. Query08</a></li>
+<li><a href="#14-query09">14. Query09</a></li>
+<li><a href="#15-query10">15. Query10</a></li>
+</ul>
+<hr>
+<h3 id="1-connexion-avec-psql">1. Connexion avec psql</h3>
+<div style="background-color:#f5f5f5; padding:15px; border-radius:8px;">
+<pre><code class="language-bash">PGPASSWORD=Tamerlan2026 psql -h 127.0.0.1 -U postgres -p 5433
+</code></pre>
+<hr>
+<pre><code class="language-bash">podman run --name postgres \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=admin \
+  -p 5436:5432 \
+  -v /home/durandf/postgres_data:/var/lib/postgresql:z \
+  -d docker.io/library/postgres:latest
+
+sudo <span class="hljs-built_in">chown</span> -R durandf:durandf /home/durandf/postgres_data
+sudo <span class="hljs-built_in">chmod</span> -R 755 /home/durandf/postgres_data
+
+<span class="hljs-built_in">cd</span> /home/durandf/postgres_data/18/docker
+
+apt update &amp;&amp; apt upgrade -y &amp;&amp; apt install vim -y
+
+👉 postgresql.conf :
+vi +/listen_addresses /var/lib/postgresql/18/docker/postgresql.conf
+
+listen_addresses = <span class="hljs-string">&#x27;*&#x27;</span>
+port = 5432
+
+👉 pg_hba.conf
+vi +<span class="hljs-string">&#x27;/IPv4 local connections:&#x27;</span> /var/lib/postgresql/18/docker/pg_hba.conf
+                
+host    all     all     0.0.0.0/0     md5
+
+
+Sous wsl2:
+psql -h 127.0.0.1 -U postgres -p 5436
+</code></pre>
+</div>
+<h3 id="-table-des-matières"><a href="#table-des-mati%C3%A8res">↑ Table des matières</a></h3>
+<hr>
+<h3 id="2-modèle-entités-relations-dvd-rental">2. Modèle Entités-Relations DVD Rental</h3>
+<p align="center">
+  <img src="https://github.com/gordonkwokkwok/DVD-Rental-PostgreSQL-Project/assets/112631794/5c55cbde-9e67-4363-99bc-177bf7903882" alt="Image" width="700">
+</p
+<h3 id="-table-des-matières-1"><a href="#table-des-mati%C3%A8res">↑ Table des matières</a></h3>
+<hr>
+<h3 id="3-téléchargement-des-données-de-la-base-de-données-dvdrental">3. Téléchargement des données de la base de données DVDRENTAL</h3>
+<p><a href="https://www.postgresqltutorial.com/postgresql-getting-started/postgresql-sample-database/">Lien</a> ; ou</p>
+<ul>
+<li><a href="https://github.com/gordonkwokkwok/DVD-Rental-PostgreSQL-Project/tree/main/dataset">Télécharger ici</a></li>
+</ul>
+<h3 id="-table-des-matières-2"><a href="#table-des-mati%C3%A8res">↑ Table des matières</a></h3>
+<hr>
+<h3 id="4-modèle-er-dvd-rental">4. Modèle ER DVD Rental</h3>
+<p align="center">
+  <img src="https://github.com/gordonkwokkwok/DVD-Rental-PostgreSQL-Project/assets/112631794/5c55cbde-9e67-4363-99bc-177bf7903882" alt="Image" width="700">
+</p>
+<h3 id="-table-des-matières-3"><a href="#table-des-mati%C3%A8res">↑ Table des matières</a></h3>
+<hr>
+<h3 id="5-créer-lutilisateur-fdurand-et-accès-à-la-base-dvdrental">5. Créer l'utilisateur fdurand et accès à la base DVDRENTAL</h3>
+<div style="background-color:#f5f5f5; padding:15px; border-radius:8px;">
+<pre><code class="language-bash">psql -U fdurand -h 127.0.0.1 -d postgres -p 5436
+psql -h 127.0.0.1 -U postgres -p 5436 -d dvdrental
+</code></pre>
+<hr>
+<pre><code class="language-sql"><span class="hljs-keyword">GRANT</span> <span class="hljs-keyword">CONNECT</span> <span class="hljs-keyword">ON</span> DATABASE dvdrental <span class="hljs-keyword">TO</span> fdurand;
+<span class="hljs-keyword">GRANT</span> <span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">ON</span> <span class="hljs-keyword">ALL</span> TABLES <span class="hljs-keyword">IN</span> SCHEMA public <span class="hljs-keyword">TO</span> fdurand;
+
+<span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">DEFAULT</span> PRIVILEGES <span class="hljs-keyword">IN</span> SCHEMA public
+<span class="hljs-keyword">GRANT</span> <span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">ON</span> TABLES <span class="hljs-keyword">TO</span> fdurand;
+</code></pre>
+<hr>
+<h3 id="6-query01">6. Query01</h3>
+<pre><code class="language-sql"><span class="hljs-keyword">SELECT</span> first_name, last_name <span class="hljs-keyword">FROM</span> actor <span class="hljs-keyword">WHERE</span> first_name <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;Johnny&#x27;</span>;
+
+<span class="hljs-operator">+</span><span class="hljs-comment">------------+--------------+</span>
+<span class="hljs-operator">|</span> first_name <span class="hljs-operator">|</span>  last_name   <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">------------+--------------+</span>
+<span class="hljs-operator">|</span> Johnny     <span class="hljs-operator">|</span> Lollobrigida <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Johnny     <span class="hljs-operator">|</span> Cage         <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">------------+--------------+</span>
+</code></pre>
+<h3 id="-table-des-matières-4"><a href="#table-des-mati%C3%A8res">↑ Table des matières</a></h3>
+<hr>
+<h3 id="7-query02">7. Query02</h3>
+<pre><code class="language-sql"><span class="hljs-keyword">SELECT</span> film.title, <span class="hljs-built_in">COUNT</span>(actor.actor_id) <span class="hljs-keyword">as</span> actor_count
+<span class="hljs-keyword">FROM</span> film
+<span class="hljs-keyword">INNER</span> <span class="hljs-keyword">JOIN</span> film_actor <span class="hljs-keyword">ON</span> film.film_id <span class="hljs-operator">=</span> film_actor.film_id
+<span class="hljs-keyword">INNER</span> <span class="hljs-keyword">JOIN</span> actor <span class="hljs-keyword">ON</span> actor.actor_id <span class="hljs-operator">=</span> film_actor.actor_id
+<span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> film.title LIMIT <span class="hljs-number">10</span>;
+
+<span class="hljs-operator">+</span><span class="hljs-comment">------------------+-------------+</span>
+<span class="hljs-operator">|</span>      title       <span class="hljs-operator">|</span> actor_count <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">------------------+-------------+</span>
+<span class="hljs-operator">|</span> Academy Dinosaur <span class="hljs-operator">|</span>          <span class="hljs-number">10</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Ace Goldfinger   <span class="hljs-operator">|</span>           <span class="hljs-number">4</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Adaptation Holes <span class="hljs-operator">|</span>           <span class="hljs-number">5</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Affair Prejudice <span class="hljs-operator">|</span>           <span class="hljs-number">5</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> African Egg      <span class="hljs-operator">|</span>           <span class="hljs-number">5</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Agent Truman     <span class="hljs-operator">|</span>           <span class="hljs-number">7</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Airplane Sierra  <span class="hljs-operator">|</span>           <span class="hljs-number">5</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Airport Pollock  <span class="hljs-operator">|</span>           <span class="hljs-number">4</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Alabama Devil    <span class="hljs-operator">|</span>           <span class="hljs-number">9</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Aladdin Calendar <span class="hljs-operator">|</span>           <span class="hljs-number">8</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">------------------+-------------+</span>
+</code></pre>
+<h3 id="-table-des-matières-5"><a href="#table-des-mati%C3%A8res">↑ Table des matières</a></h3>
+<hr>
+<h3 id="8-query03">8. Query03</h3>
+<pre><code class="language-sql"><span class="hljs-keyword">SELECT</span> c.customer_id, c.first_name, c.last_name, p.amount 
+<span class="hljs-keyword">FROM</span> customer <span class="hljs-keyword">as</span> c
+<span class="hljs-keyword">LEFT</span> <span class="hljs-keyword">JOIN</span> payment <span class="hljs-keyword">as</span> p 
+<span class="hljs-keyword">ON</span> c.customer_id <span class="hljs-operator">=</span> p.customer_id
+<span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> p.amount <span class="hljs-keyword">DESC</span>
+LIMIT <span class="hljs-number">10</span>;
+
+<span class="hljs-operator">+</span><span class="hljs-comment">-------------+------------+-----------+--------+</span>
+<span class="hljs-operator">|</span> customer_id <span class="hljs-operator">|</span> first_name <span class="hljs-operator">|</span> last_name <span class="hljs-operator">|</span> amount <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">-------------+------------+-----------+--------+</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">591</span> <span class="hljs-operator">|</span> Kent       <span class="hljs-operator">|</span> Arsenault <span class="hljs-operator">|</span>  <span class="hljs-number">11.99</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">195</span> <span class="hljs-operator">|</span> Vanessa    <span class="hljs-operator">|</span> Sims      <span class="hljs-operator">|</span>  <span class="hljs-number">11.99</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">116</span> <span class="hljs-operator">|</span> Victoria   <span class="hljs-operator">|</span> Gibson    <span class="hljs-operator">|</span>  <span class="hljs-number">11.99</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">237</span> <span class="hljs-operator">|</span> Tanya      <span class="hljs-operator">|</span> Gilbert   <span class="hljs-operator">|</span>  <span class="hljs-number">11.99</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">592</span> <span class="hljs-operator">|</span> Terrance   <span class="hljs-operator">|</span> Roush     <span class="hljs-operator">|</span>  <span class="hljs-number">11.99</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>          <span class="hljs-number">13</span> <span class="hljs-operator">|</span> Karen      <span class="hljs-operator">|</span> Jackson   <span class="hljs-operator">|</span>  <span class="hljs-number">11.99</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">362</span> <span class="hljs-operator">|</span> Nicholas   <span class="hljs-operator">|</span> Barfield  <span class="hljs-operator">|</span>  <span class="hljs-number">11.99</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">204</span> <span class="hljs-operator">|</span> Rosemary   <span class="hljs-operator">|</span> Schmidt   <span class="hljs-operator">|</span>  <span class="hljs-number">11.99</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">571</span> <span class="hljs-operator">|</span> Johnnie    <span class="hljs-operator">|</span> Chisholm  <span class="hljs-operator">|</span>  <span class="hljs-number">10.99</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">558</span> <span class="hljs-operator">|</span> Jimmie     <span class="hljs-operator">|</span> Eggleston <span class="hljs-operator">|</span>  <span class="hljs-number">10.99</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">-------------+------------+-----------+--------+</span>
+</code></pre>
+<h3 id="-table-des-matières-6"><a href="#table-des-mati%C3%A8res">↑ Table des matières</a></h3>
+<hr>
+<h3 id="9-query04">9. Query04</h3>
+<pre><code class="language-sql"><span class="hljs-keyword">SELECT</span> customer_id , <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">AS</span> Rental_Count
+<span class="hljs-keyword">FROM</span> rental
+<span class="hljs-keyword">WHERE</span> rental_date <span class="hljs-keyword">BETWEEN</span> <span class="hljs-string">&#x27;2005-07-01&#x27;</span> <span class="hljs-keyword">AND</span> <span class="hljs-string">&#x27;2005-08-31&#x27;</span> 
+<span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> customer_id 
+<span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> Rental_Count <span class="hljs-keyword">DESC</span> LIMIT <span class="hljs-number">10</span>;
+
+<span class="hljs-operator">+</span><span class="hljs-comment">-------------+--------------+</span>
+<span class="hljs-operator">|</span> customer_id <span class="hljs-operator">|</span> rental_count <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">-------------+--------------+</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">148</span> <span class="hljs-operator">|</span>           <span class="hljs-number">40</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">144</span> <span class="hljs-operator">|</span>           <span class="hljs-number">34</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">137</span> <span class="hljs-operator">|</span>           <span class="hljs-number">34</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">469</span> <span class="hljs-operator">|</span>           <span class="hljs-number">33</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">526</span> <span class="hljs-operator">|</span>           <span class="hljs-number">33</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">366</span> <span class="hljs-operator">|</span>           <span class="hljs-number">33</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">257</span> <span class="hljs-operator">|</span>           <span class="hljs-number">32</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">410</span> <span class="hljs-operator">|</span>           <span class="hljs-number">31</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">373</span> <span class="hljs-operator">|</span>           <span class="hljs-number">31</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>          <span class="hljs-number">75</span> <span class="hljs-operator">|</span>           <span class="hljs-number">31</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">-------------+--------------+</span>
+</code></pre>
+<h3 id="-table-des-matières-7"><a href="#table-des-mati%C3%A8res">↑ Table des matières</a></h3>
+<hr>
+<h3 id="10-query05">10. Query05</h3>
+<pre><code class="language-sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">DISTINCT</span> customer_id 
+<span class="hljs-keyword">FROM</span> rental 
+<span class="hljs-keyword">WHERE</span> customer_id <span class="hljs-keyword">IN</span> (<span class="hljs-keyword">SELECT</span> customer_id <span class="hljs-keyword">FROM</span> payment <span class="hljs-keyword">WHERE</span> amount <span class="hljs-operator">&gt;</span> <span class="hljs-number">10</span>) LIMIT <span class="hljs-number">10</span>;
+
+<span class="hljs-operator">+</span><span class="hljs-comment">-------------+</span>
+<span class="hljs-operator">|</span> customer_id <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">-------------+</span>
+<span class="hljs-operator">|</span>          <span class="hljs-number">87</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">477</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">550</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">272</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">292</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">529</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">187</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">331</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">307</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>          <span class="hljs-number">54</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">-------------+</span>
+</code></pre>
+<h3 id="-table-des-matières-8"><a href="#table-des-mati%C3%A8res">↑ Table des matières</a></h3>
+<hr>
+<h4 id="11-query06">11. Query06</h4>
+<pre><code class="language-sql"><span class="hljs-keyword">SELECT</span> rating, 
+       <span class="hljs-built_in">AVG</span>(length) <span class="hljs-keyword">AS</span> avg_length, 
+       <span class="hljs-keyword">CASE</span> 
+         <span class="hljs-keyword">WHEN</span> <span class="hljs-built_in">AVG</span>(length) <span class="hljs-operator">&gt;</span> <span class="hljs-number">120</span> <span class="hljs-keyword">THEN</span> <span class="hljs-string">&#x27;Long&#x27;</span>
+         <span class="hljs-keyword">ELSE</span> <span class="hljs-string">&#x27;Short&#x27;</span>
+       <span class="hljs-keyword">END</span> <span class="hljs-keyword">AS</span> film_length_category
+<span class="hljs-keyword">FROM</span> film 
+<span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> rating;
+
+<span class="hljs-operator">+</span><span class="hljs-comment">--------+----------------------+----------------------+</span>
+<span class="hljs-operator">|</span> rating <span class="hljs-operator">|</span>      avg_length      <span class="hljs-operator">|</span> film_length_category <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">--------+----------------------+----------------------+</span>
+<span class="hljs-operator">|</span> G      <span class="hljs-operator">|</span> <span class="hljs-number">111.0505617977528090</span> <span class="hljs-operator">|</span> Short                <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> NC<span class="hljs-number">-17</span>  <span class="hljs-operator">|</span> <span class="hljs-number">113.2285714285714286</span> <span class="hljs-operator">|</span> Short                <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> PG     <span class="hljs-operator">|</span> <span class="hljs-number">112.0051546391752577</span> <span class="hljs-operator">|</span> Short                <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> PG<span class="hljs-number">-13</span>  <span class="hljs-operator">|</span> <span class="hljs-number">120.4439461883408072</span> <span class="hljs-operator">|</span> Long                 <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> R      <span class="hljs-operator">|</span> <span class="hljs-number">118.6615384615384615</span> <span class="hljs-operator">|</span> Short                <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">--------+----------------------+----------------------+</span>
+</code></pre>
+<h3 id="-table-des-matières-9"><a href="#table-des-mati%C3%A8res">↑ Table des matières</a></h3>
+<hr>
+<h4 id="12-query07">12. Query07</h4>
+<pre><code class="language-sql"><span class="hljs-keyword">SELECT</span> rental_id, customer_id, rental_date, 
+       <span class="hljs-built_in">RANK</span>() <span class="hljs-keyword">OVER</span> (<span class="hljs-keyword">PARTITION</span> <span class="hljs-keyword">BY</span> customer_id <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> rental_date) <span class="hljs-keyword">as</span> rental_rank
+<span class="hljs-keyword">FROM</span> rental LIMIT <span class="hljs-number">10</span>;
+
+<span class="hljs-operator">+</span><span class="hljs-comment">-----------+-------------+---------------------+-------------+</span>
+<span class="hljs-operator">|</span> rental_id <span class="hljs-operator">|</span> customer_id <span class="hljs-operator">|</span>     rental_date     <span class="hljs-operator">|</span> rental_rank <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">-----------+-------------+---------------------+-------------+</span>
+<span class="hljs-operator">|</span>        <span class="hljs-number">76</span> <span class="hljs-operator">|</span>           <span class="hljs-number">1</span> <span class="hljs-operator">|</span> <span class="hljs-number">2005</span><span class="hljs-number">-05</span><span class="hljs-number">-25</span> <span class="hljs-number">11</span>:<span class="hljs-number">30</span>:<span class="hljs-number">37</span> <span class="hljs-operator">|</span>           <span class="hljs-number">1</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>       <span class="hljs-number">573</span> <span class="hljs-operator">|</span>           <span class="hljs-number">1</span> <span class="hljs-operator">|</span> <span class="hljs-number">2005</span><span class="hljs-number">-05</span><span class="hljs-number">-28</span> <span class="hljs-number">10</span>:<span class="hljs-number">35</span>:<span class="hljs-number">23</span> <span class="hljs-operator">|</span>           <span class="hljs-number">2</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>      <span class="hljs-number">1185</span> <span class="hljs-operator">|</span>           <span class="hljs-number">1</span> <span class="hljs-operator">|</span> <span class="hljs-number">2005</span><span class="hljs-number">-06</span><span class="hljs-number">-15</span> <span class="hljs-number">00</span>:<span class="hljs-number">54</span>:<span class="hljs-number">12</span> <span class="hljs-operator">|</span>           <span class="hljs-number">3</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>      <span class="hljs-number">1422</span> <span class="hljs-operator">|</span>           <span class="hljs-number">1</span> <span class="hljs-operator">|</span> <span class="hljs-number">2005</span><span class="hljs-number">-06</span><span class="hljs-number">-15</span> <span class="hljs-number">18</span>:<span class="hljs-number">02</span>:<span class="hljs-number">53</span> <span class="hljs-operator">|</span>           <span class="hljs-number">4</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>      <span class="hljs-number">1476</span> <span class="hljs-operator">|</span>           <span class="hljs-number">1</span> <span class="hljs-operator">|</span> <span class="hljs-number">2005</span><span class="hljs-number">-06</span><span class="hljs-number">-15</span> <span class="hljs-number">21</span>:<span class="hljs-number">08</span>:<span class="hljs-number">46</span> <span class="hljs-operator">|</span>           <span class="hljs-number">5</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>      <span class="hljs-number">1725</span> <span class="hljs-operator">|</span>           <span class="hljs-number">1</span> <span class="hljs-operator">|</span> <span class="hljs-number">2005</span><span class="hljs-number">-06</span><span class="hljs-number">-16</span> <span class="hljs-number">15</span>:<span class="hljs-number">18</span>:<span class="hljs-number">57</span> <span class="hljs-operator">|</span>           <span class="hljs-number">6</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>      <span class="hljs-number">2308</span> <span class="hljs-operator">|</span>           <span class="hljs-number">1</span> <span class="hljs-operator">|</span> <span class="hljs-number">2005</span><span class="hljs-number">-06</span><span class="hljs-number">-18</span> <span class="hljs-number">08</span>:<span class="hljs-number">41</span>:<span class="hljs-number">48</span> <span class="hljs-operator">|</span>           <span class="hljs-number">7</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>      <span class="hljs-number">2363</span> <span class="hljs-operator">|</span>           <span class="hljs-number">1</span> <span class="hljs-operator">|</span> <span class="hljs-number">2005</span><span class="hljs-number">-06</span><span class="hljs-number">-18</span> <span class="hljs-number">13</span>:<span class="hljs-number">33</span>:<span class="hljs-number">59</span> <span class="hljs-operator">|</span>           <span class="hljs-number">8</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>      <span class="hljs-number">3284</span> <span class="hljs-operator">|</span>           <span class="hljs-number">1</span> <span class="hljs-operator">|</span> <span class="hljs-number">2005</span><span class="hljs-number">-06</span><span class="hljs-number">-21</span> <span class="hljs-number">06</span>:<span class="hljs-number">24</span>:<span class="hljs-number">45</span> <span class="hljs-operator">|</span>           <span class="hljs-number">9</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>      <span class="hljs-number">4526</span> <span class="hljs-operator">|</span>           <span class="hljs-number">1</span> <span class="hljs-operator">|</span> <span class="hljs-number">2005</span><span class="hljs-number">-07</span><span class="hljs-number">-08</span> <span class="hljs-number">03</span>:<span class="hljs-number">17</span>:<span class="hljs-number">05</span> <span class="hljs-operator">|</span>          <span class="hljs-number">10</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">-----------+-------------+---------------------+-------------+</span>
+</code></pre>
+<h3 id="-table-des-matières-10"><a href="#table-des-mati%C3%A8res">↑ Table des matières</a></h3>
+<hr>
+<h4 id="13-query08">13. Query08</h4>
+<pre><code class="language-sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">MIN</span>(length) <span class="hljs-keyword">as</span> min_length, <span class="hljs-built_in">MAX</span>(length) <span class="hljs-keyword">as</span> max_length 
+<span class="hljs-keyword">FROM</span> film 
+<span class="hljs-keyword">WHERE</span> title <span class="hljs-keyword">LIKE</span> <span class="hljs-string">&#x27;A%&#x27;</span>;
+
+<span class="hljs-operator">+</span><span class="hljs-comment">------------+------------+</span>
+<span class="hljs-operator">|</span> min_length <span class="hljs-operator">|</span> max_length <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">------------+------------+</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">46</span> <span class="hljs-operator">|</span>        <span class="hljs-number">181</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">------------+------------+</span>
+</code></pre>
+<h3 id="-table-des-matières-11"><a href="#table-des-mati%C3%A8res">↑ Table des matières</a></h3>
+<hr>
+<h4 id="14-query09">14. Query09</h4>
+<pre><code class="language-sql"><span class="hljs-keyword">SELECT</span> customer.customer_id, customer.first_name, customer.last_name, rental.rental_id 
+<span class="hljs-keyword">FROM</span> customer 
+<span class="hljs-keyword">RIGHT</span> <span class="hljs-keyword">JOIN</span> rental <span class="hljs-keyword">ON</span> customer.customer_id <span class="hljs-operator">=</span> rental.customer_id 
+<span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> rental.rental_date <span class="hljs-keyword">DESC</span> LIMIT <span class="hljs-number">10</span>;
+
+<span class="hljs-operator">+</span><span class="hljs-comment">-------------+------------+-----------+-----------+</span>
+<span class="hljs-operator">|</span> customer_id <span class="hljs-operator">|</span> first_name <span class="hljs-operator">|</span> last_name <span class="hljs-operator">|</span> rental_id <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">-------------+------------+-----------+-----------+</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">373</span> <span class="hljs-operator">|</span> Louis      <span class="hljs-operator">|</span> Leone     <span class="hljs-operator">|</span>     <span class="hljs-number">11739</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">532</span> <span class="hljs-operator">|</span> Neil       <span class="hljs-operator">|</span> Renner    <span class="hljs-operator">|</span>     <span class="hljs-number">14616</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">216</span> <span class="hljs-operator">|</span> Natalie    <span class="hljs-operator">|</span> Meyer     <span class="hljs-operator">|</span>     <span class="hljs-number">11676</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">374</span> <span class="hljs-operator">|</span> Jeremy     <span class="hljs-operator">|</span> Hurtado   <span class="hljs-operator">|</span>     <span class="hljs-number">15966</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">274</span> <span class="hljs-operator">|</span> Naomi      <span class="hljs-operator">|</span> Jennings  <span class="hljs-operator">|</span>     <span class="hljs-number">13486</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">168</span> <span class="hljs-operator">|</span> Regina     <span class="hljs-operator">|</span> Berry     <span class="hljs-operator">|</span>     <span class="hljs-number">15894</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">472</span> <span class="hljs-operator">|</span> Greg       <span class="hljs-operator">|</span> Robins    <span class="hljs-operator">|</span>     <span class="hljs-number">14928</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">282</span> <span class="hljs-operator">|</span> Jenny      <span class="hljs-operator">|</span> Castro    <span class="hljs-operator">|</span>     <span class="hljs-number">15430</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">287</span> <span class="hljs-operator">|</span> Becky      <span class="hljs-operator">|</span> Miles     <span class="hljs-operator">|</span>     <span class="hljs-number">14204</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span>         <span class="hljs-number">352</span> <span class="hljs-operator">|</span> Albert     <span class="hljs-operator">|</span> Crouse    <span class="hljs-operator">|</span>     <span class="hljs-number">13578</span> <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">-------------+------------+-----------+-----------+</span>
+</code></pre>
+<h3 id="-table-des-matières-12"><a href="#table-des-mati%C3%A8res">↑ Table des matières</a></h3>
+<hr>
+<h4 id="15-query10">15. Query10</h4>
+<pre><code class="language-sql"><span class="hljs-keyword">SELECT</span> film.title, category.name 
+<span class="hljs-keyword">FROM</span> film 
+<span class="hljs-keyword">CROSS</span> <span class="hljs-keyword">JOIN</span> category 
+LIMIT <span class="hljs-number">20</span>;
+
+<span class="hljs-operator">+</span><span class="hljs-comment">------------------+-------------+</span>
+<span class="hljs-operator">|</span>      title       <span class="hljs-operator">|</span>    name     <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">------------------+-------------+</span>
+<span class="hljs-operator">|</span> Chamber Italian  <span class="hljs-operator">|</span> Action      <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Chamber Italian  <span class="hljs-operator">|</span> Animation   <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Chamber Italian  <span class="hljs-operator">|</span> Children    <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Chamber Italian  <span class="hljs-operator">|</span> Classics    <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Chamber Italian  <span class="hljs-operator">|</span> Comedy      <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Chamber Italian  <span class="hljs-operator">|</span> Documentary <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Chamber Italian  <span class="hljs-operator">|</span> Drama       <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Chamber Italian  <span class="hljs-operator">|</span> Family      <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Chamber Italian  <span class="hljs-operator">|</span> <span class="hljs-keyword">Foreign</span>     <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Chamber Italian  <span class="hljs-operator">|</span> Games       <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Chamber Italian  <span class="hljs-operator">|</span> Horror      <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Chamber Italian  <span class="hljs-operator">|</span> Music       <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Chamber Italian  <span class="hljs-operator">|</span> <span class="hljs-keyword">New</span>         <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Chamber Italian  <span class="hljs-operator">|</span> Sci<span class="hljs-operator">-</span>Fi      <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Chamber Italian  <span class="hljs-operator">|</span> Sports      <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Chamber Italian  <span class="hljs-operator">|</span> Travel      <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Grosse Wonderful <span class="hljs-operator">|</span> Action      <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Grosse Wonderful <span class="hljs-operator">|</span> Animation   <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Grosse Wonderful <span class="hljs-operator">|</span> Children    <span class="hljs-operator">|</span>
+<span class="hljs-operator">|</span> Grosse Wonderful <span class="hljs-operator">|</span> Classics    <span class="hljs-operator">|</span>
+<span class="hljs-operator">+</span><span class="hljs-comment">------------------+-------------+</span>
+</code></pre>
+<h3 id="-table-des-matières-13"><a href="#table-des-mati%C3%A8res">↑ Table des matières</a></h3>
+
+            
+            
+        </body>
+        </html>

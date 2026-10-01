@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Postgresql</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h2 id="postgresql">Postgresql</h2>
+<h3 id="table-des-matières">Table des matières</h3>
+<ul>
+<li><a href="#1-connexion-avec-psql">1. Connexion avec psql</a></li>
+<li><a href="#2-cr%C3%A9ation-de-la-base-de-donn%C3%A9es-hr">2. Création de la base de données HR</a></li>
+</ul>
+<hr>
+<h3 id="1-connexion-avec-psql">1. Connexion avec psql</h3>
+<div style="background-color:#f5f5f5; padding:15px; border-radius:8px;">
+<pre><code class="language-bash">psql -h localhost -U postgres -p 5433
+</code></pre>
+</div>
+<h3 id="-table-des-matières"><a href="#table-des-mati%C3%A8res">↑ Table des matières</a></h3>
+<hr>
+<h3 id="2-création-de-la-base-de-données-hr">2. Création de la base de données HR</h3>
+<div style="background-color:#f5f5f5; padding:15px; border-radius:8px;">
+<pre><code class="language-sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> regions (
+    region_id SERIAL <span class="hljs-keyword">PRIMARY</span> KEY,
+    region_name <span class="hljs-type">CHARACTER</span> <span class="hljs-type">VARYING</span> (<span class="hljs-number">25</span>)
+);
+
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> countries (
+    country_id <span class="hljs-type">CHARACTER</span> (<span class="hljs-number">2</span>) <span class="hljs-keyword">PRIMARY</span> KEY,
+    country_name <span class="hljs-type">CHARACTER</span> <span class="hljs-type">VARYING</span> (<span class="hljs-number">40</span>),
+    region_id <span class="hljs-type">INTEGER</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    <span class="hljs-keyword">FOREIGN</span> KEY (region_id) <span class="hljs-keyword">REFERENCES</span> regions (region_id) <span class="hljs-keyword">ON</span> <span class="hljs-keyword">UPDATE</span> CASCADE <span class="hljs-keyword">ON</span> <span class="hljs-keyword">DELETE</span> CASCADE
+);
+
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> locations (
+    location_id SERIAL <span class="hljs-keyword">PRIMARY</span> KEY,
+    street_address <span class="hljs-type">CHARACTER</span> <span class="hljs-type">VARYING</span> (<span class="hljs-number">40</span>),
+    postal_code <span class="hljs-type">CHARACTER</span> <span class="hljs-type">VARYING</span> (<span class="hljs-number">12</span>),
+    city <span class="hljs-type">CHARACTER</span> <span class="hljs-type">VARYING</span> (<span class="hljs-number">30</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    state_province <span class="hljs-type">CHARACTER</span> <span class="hljs-type">VARYING</span> (<span class="hljs-number">25</span>),
+    country_id <span class="hljs-type">CHARACTER</span> (<span class="hljs-number">2</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    <span class="hljs-keyword">FOREIGN</span> KEY (country_id) <span class="hljs-keyword">REFERENCES</span> countries (country_id) <span class="hljs-keyword">ON</span> <span class="hljs-keyword">UPDATE</span> CASCADE <span class="hljs-keyword">ON</span> <span class="hljs-keyword">DELETE</span> CASCADE
+);
+
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> departments (
+    department_id SERIAL <span class="hljs-keyword">PRIMARY</span> KEY,
+    department_name <span class="hljs-type">CHARACTER</span> <span class="hljs-type">VARYING</span> (<span class="hljs-number">30</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    location_id <span class="hljs-type">INTEGER</span>,
+    <span class="hljs-keyword">FOREIGN</span> KEY (location_id) <span class="hljs-keyword">REFERENCES</span> locations (location_id) <span class="hljs-keyword">ON</span> <span class="hljs-keyword">UPDATE</span> CASCADE <span class="hljs-keyword">ON</span> <span class="hljs-keyword">DELETE</span> CASCADE
+);
+
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> jobs (
+    job_id SERIAL <span class="hljs-keyword">PRIMARY</span> KEY,
+    job_title <span class="hljs-type">CHARACTER</span> <span class="hljs-type">VARYING</span> (<span class="hljs-number">35</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    min_salary <span class="hljs-type">NUMERIC</span> (<span class="hljs-number">8</span>, <span class="hljs-number">2</span>),
+    max_salary <span class="hljs-type">NUMERIC</span> (<span class="hljs-number">8</span>, <span class="hljs-number">2</span>)
+);
+
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> employees (
+    employee_id SERIAL <span class="hljs-keyword">PRIMARY</span> KEY,
+    first_name <span class="hljs-type">CHARACTER</span> <span class="hljs-type">VARYING</span> (<span class="hljs-number">20</span>),
+    last_name <span class="hljs-type">CHARACTER</span> <span class="hljs-type">VARYING</span> (<span class="hljs-number">25</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    email <span class="hljs-type">CHARACTER</span> <span class="hljs-type">VARYING</span> (<span class="hljs-number">100</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    phone_number <span class="hljs-type">CHARACTER</span> <span class="hljs-type">VARYING</span> (<span class="hljs-number">20</span>),
+    hire_date <span class="hljs-type">DATE</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    job_id <span class="hljs-type">INTEGER</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    salary <span class="hljs-type">NUMERIC</span> (<span class="hljs-number">8</span>, <span class="hljs-number">2</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    manager_id <span class="hljs-type">INTEGER</span>,
+    department_id <span class="hljs-type">INTEGER</span>,
+    <span class="hljs-keyword">FOREIGN</span> KEY (job_id) <span class="hljs-keyword">REFERENCES</span> jobs (job_id) <span class="hljs-keyword">ON</span> <span class="hljs-keyword">UPDATE</span> CASCADE <span class="hljs-keyword">ON</span> <span class="hljs-keyword">DELETE</span> CASCADE,
+    <span class="hljs-keyword">FOREIGN</span> KEY (department_id) <span class="hljs-keyword">REFERENCES</span> departments (department_id) <span class="hljs-keyword">ON</span> <span class="hljs-keyword">UPDATE</span> CASCADE <span class="hljs-keyword">ON</span> <span class="hljs-keyword">DELETE</span> CASCADE,
+    <span class="hljs-keyword">FOREIGN</span> KEY (manager_id) <span class="hljs-keyword">REFERENCES</span> employees (employee_id) <span class="hljs-keyword">ON</span> <span class="hljs-keyword">UPDATE</span> CASCADE <span class="hljs-keyword">ON</span> <span class="hljs-keyword">DELETE</span> CASCADE
+);
+
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> dependents (
+    dependent_id SERIAL <span class="hljs-keyword">PRIMARY</span> KEY,
+    first_name <span class="hljs-type">CHARACTER</span> <span class="hljs-type">VARYING</span> (<span class="hljs-number">50</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    last_name <span class="hljs-type">CHARACTER</span> <span class="hljs-type">VARYING</span> (<span class="hljs-number">50</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    relationship <span class="hljs-type">CHARACTER</span> <span class="hljs-type">VARYING</span> (<span class="hljs-number">25</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    employee_id <span class="hljs-type">INTEGER</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    <span class="hljs-keyword">FOREIGN</span> KEY (employee_id) <span class="hljs-keyword">REFERENCES</span> employees (employee_id) <span class="hljs-keyword">ON</span> <span class="hljs-keyword">DELETE</span> CASCADE <span class="hljs-keyword">ON</span> <span class="hljs-keyword">UPDATE</span> CASCADE
+);
+
+<span class="hljs-comment">/*Data for the table regions */</span>
+
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> regions(region_id,region_name) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;Europe&#x27;</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> regions(region_id,region_name) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;Americas&#x27;</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> regions(region_id,region_name) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">3</span>,<span class="hljs-string">&#x27;Asia&#x27;</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> regions(region_id,region_name) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">4</span>,<span class="hljs-string">&#x27;Middle East and Africa&#x27;</span>);
+
+
+<span class="hljs-comment">/*Data for the table countries */</span>
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;AR&#x27;</span>,<span class="hljs-string">&#x27;Argentina&#x27;</span>,<span class="hljs-number">2</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;AU&#x27;</span>,<span class="hljs-string">&#x27;Australia&#x27;</span>,<span class="hljs-number">3</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;BE&#x27;</span>,<span class="hljs-string">&#x27;Belgium&#x27;</span>,<span class="hljs-number">1</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;BR&#x27;</span>,<span class="hljs-string">&#x27;Brazil&#x27;</span>,<span class="hljs-number">2</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;CA&#x27;</span>,<span class="hljs-string">&#x27;Canada&#x27;</span>,<span class="hljs-number">2</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;CH&#x27;</span>,<span class="hljs-string">&#x27;Switzerland&#x27;</span>,<span class="hljs-number">1</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;CN&#x27;</span>,<span class="hljs-string">&#x27;China&#x27;</span>,<span class="hljs-number">3</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;DE&#x27;</span>,<span class="hljs-string">&#x27;Germany&#x27;</span>,<span class="hljs-number">1</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;DK&#x27;</span>,<span class="hljs-string">&#x27;Denmark&#x27;</span>,<span class="hljs-number">1</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;EG&#x27;</span>,<span class="hljs-string">&#x27;Egypt&#x27;</span>,<span class="hljs-number">4</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;FR&#x27;</span>,<span class="hljs-string">&#x27;France&#x27;</span>,<span class="hljs-number">1</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;HK&#x27;</span>,<span class="hljs-string">&#x27;HongKong&#x27;</span>,<span class="hljs-number">3</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;IL&#x27;</span>,<span class="hljs-string">&#x27;Israel&#x27;</span>,<span class="hljs-number">4</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;IN&#x27;</span>,<span class="hljs-string">&#x27;India&#x27;</span>,<span class="hljs-number">3</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;IT&#x27;</span>,<span class="hljs-string">&#x27;Italy&#x27;</span>,<span class="hljs-number">1</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;JP&#x27;</span>,<span class="hljs-string">&#x27;Japan&#x27;</span>,<span class="hljs-number">3</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;KW&#x27;</span>,<span class="hljs-string">&#x27;Kuwait&#x27;</span>,<span class="hljs-number">4</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;MX&#x27;</span>,<span class="hljs-string">&#x27;Mexico&#x27;</span>,<span class="hljs-number">2</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;NG&#x27;</span>,<span class="hljs-string">&#x27;Nigeria&#x27;</span>,<span class="hljs-number">4</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;NL&#x27;</span>,<span class="hljs-string">&#x27;Netherlands&#x27;</span>,<span class="hljs-number">1</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;SG&#x27;</span>,<span class="hljs-string">&#x27;Singapore&#x27;</span>,<span class="hljs-number">3</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;UK&#x27;</span>,<span class="hljs-string">&#x27;United Kingdom&#x27;</span>,<span class="hljs-number">1</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;US&#x27;</span>,<span class="hljs-string">&#x27;United States of America&#x27;</span>,<span class="hljs-number">2</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;ZM&#x27;</span>,<span class="hljs-string">&#x27;Zambia&#x27;</span>,<span class="hljs-number">4</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> countries(country_id,country_name,region_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;ZW&#x27;</span>,<span class="hljs-string">&#x27;Zimbabwe&#x27;</span>,<span class="hljs-number">4</span>);
+
+<span class="hljs-comment">/*Data for the table locations */</span>
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> locations(location_id,street_address,postal_code,city,state_province,country_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">1400</span>,<span class="hljs-string">&#x27;2014 Jabberwocky Rd&#x27;</span>,<span class="hljs-string">&#x27;26192&#x27;</span>,<span class="hljs-string">&#x27;Southlake&#x27;</span>,<span class="hljs-string">&#x27;Texas&#x27;</span>,<span class="hljs-string">&#x27;US&#x27;</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> locations(location_id,street_address,postal_code,city,state_province,country_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">1500</span>,<span class="hljs-string">&#x27;2011 Interiors Blvd&#x27;</span>,<span class="hljs-string">&#x27;99236&#x27;</span>,<span class="hljs-string">&#x27;South San Francisco&#x27;</span>,<span class="hljs-string">&#x27;California&#x27;</span>,<span class="hljs-string">&#x27;US&#x27;</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> locations(location_id,street_address,postal_code,city,state_province,country_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">1700</span>,<span class="hljs-string">&#x27;2004 Charade Rd&#x27;</span>,<span class="hljs-string">&#x27;98199&#x27;</span>,<span class="hljs-string">&#x27;Seattle&#x27;</span>,<span class="hljs-string">&#x27;Washington&#x27;</span>,<span class="hljs-string">&#x27;US&#x27;</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> locations(location_id,street_address,postal_code,city,state_province,country_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">1800</span>,<span class="hljs-string">&#x27;147 Spadina Ave&#x27;</span>,<span class="hljs-string">&#x27;M5V 2L7&#x27;</span>,<span class="hljs-string">&#x27;Toronto&#x27;</span>,<span class="hljs-string">&#x27;Ontario&#x27;</span>,<span class="hljs-string">&#x27;CA&#x27;</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> locations(location_id,street_address,postal_code,city,state_province,country_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">2400</span>,<span class="hljs-string">&#x27;8204 Arthur St&#x27;</span>,<span class="hljs-keyword">NULL</span>,<span class="hljs-string">&#x27;London&#x27;</span>,<span class="hljs-keyword">NULL</span>,<span class="hljs-string">&#x27;UK&#x27;</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> locations(location_id,street_address,postal_code,city,state_province,country_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">2500</span>,<span class="hljs-string">&#x27;Magdalen Centre, The Oxford Science Park&#x27;</span>,<span class="hljs-string">&#x27;OX9 9ZB&#x27;</span>,<span class="hljs-string">&#x27;Oxford&#x27;</span>,<span class="hljs-string">&#x27;Oxford&#x27;</span>,<span class="hljs-string">&#x27;UK&#x27;</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> locations(location_id,street_address,postal_code,city,state_province,country_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">2700</span>,<span class="hljs-string">&#x27;Schwanthalerstr. 7031&#x27;</span>,<span class="hljs-string">&#x27;80925&#x27;</span>,<span class="hljs-string">&#x27;Munich&#x27;</span>,<span class="hljs-string">&#x27;Bavaria&#x27;</span>,<span class="hljs-string">&#x27;DE&#x27;</span>);
+
+
+<span class="hljs-comment">/*Data for the table jobs */</span>
+
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> jobs(job_id,job_title,min_salary,max_salary) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;Public Accountant&#x27;</span>,<span class="hljs-number">4200.00</span>,<span class="hljs-number">9000.00</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> jobs(job_id,job_title,min_salary,max_salary) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;Accounting Manager&#x27;</span>,<span class="hljs-number">8200.00</span>,<span class="hljs-number">16000.00</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> jobs(job_id,job_title,min_salary,max_salary) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">3</span>,<span class="hljs-string">&#x27;Administration Assistant&#x27;</span>,<span class="hljs-number">3000.00</span>,<span class="hljs-number">6000.00</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> jobs(job_id,job_title,min_salary,max_salary) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">4</span>,<span class="hljs-string">&#x27;President&#x27;</span>,<span class="hljs-number">20000.00</span>,<span class="hljs-number">40000.00</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> jobs(job_id,job_title,min_salary,max_salary) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">5</span>,<span class="hljs-string">&#x27;Administration Vice President&#x27;</span>,<span class="hljs-number">15000.00</span>,<span class="hljs-number">30000.00</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> jobs(job_id,job_title,min_salary,max_salary) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">6</span>,<span class="hljs-string">&#x27;Accountant&#x27;</span>,<span class="hljs-number">4200.00</span>,<span class="hljs-number">9000.00</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> jobs(job_id,job_title,min_salary,max_salary) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">7</span>,<span class="hljs-string">&#x27;Finance Manager&#x27;</span>,<span class="hljs-number">8200.00</span>,<span class="hljs-number">16000.00</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> jobs(job_id,job_title,min_salary,max_salary) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">8</span>,<span class="hljs-string">&#x27;Human Resources Representative&#x27;</span>,<span class="hljs-number">4000.00</span>,<span class="hljs-number">9000.00</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> jobs(job_id,job_title,min_salary,max_salary) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">9</span>,<span class="hljs-string">&#x27;Programmer&#x27;</span>,<span class="hljs-number">4000.00</span>,<span class="hljs-number">10000.00</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> jobs(job_id,job_title,min_salary,max_salary) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">10</span>,<span class="hljs-string">&#x27;Marketing Manager&#x27;</span>,<span class="hljs-number">9000.00</span>,<span class="hljs-number">15000.00</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> jobs(job_id,job_title,min_salary,max_salary) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">11</span>,<span class="hljs-string">&#x27;Marketing Representative&#x27;</span>,<span class="hljs-number">4000.00</span>,<span class="hljs-number">9000.00</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> jobs(job_id,job_title,min_salary,max_salary) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">12</span>,<span class="hljs-string">&#x27;Public Relations Representative&#x27;</span>,<span class="hljs-number">4500.00</span>,<span class="hljs-number">10500.00</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> jobs(job_id,job_title,min_salary,max_salary) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">13</span>,<span class="hljs-string">&#x27;Purchasing Clerk&#x27;</span>,<span class="hljs-number">2500.00</span>,<span class="hljs-number">5500.00</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> jobs(job_id,job_title,min_salary,max_salary) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">14</span>,<span class="hljs-string">&#x27;Purchasing Manager&#x27;</span>,<span class="hljs-number">8000.00</span>,<span class="hljs-number">15000.00</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> jobs(job_id,job_title,min_salary,max_salary) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">15</span>,<span class="hljs-string">&#x27;Sales Manager&#x27;</span>,<span class="hljs-number">10000.00</span>,<span class="hljs-number">20000.00</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> jobs(job_id,job_title,min_salary,max_salary) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">16</span>,<span class="hljs-string">&#x27;Sales Representative&#x27;</span>,<span class="hljs-number">6000.00</span>,<span class="hljs-number">12000.00</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> jobs(job_id,job_title,min_salary,max_salary) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">17</span>,<span class="hljs-string">&#x27;Shipping Clerk&#x27;</span>,<span class="hljs-number">2500.00</span>,<span class="hljs-number">5500.00</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> jobs(job_id,job_title,min_salary,max_salary) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">18</span>,<span class="hljs-string">&#x27;Stock Clerk&#x27;</span>,<span class="hljs-number">2000.00</span>,<span class="hljs-number">5000.00</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> jobs(job_id,job_title,min_salary,max_salary) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">19</span>,<span class="hljs-string">&#x27;Stock Manager&#x27;</span>,<span class="hljs-number">5500.00</span>,<span class="hljs-number">8500.00</span>);
+
+
+<span class="hljs-comment">/*Data for the table departments */</span>
+
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> departments(department_id,department_name,location_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;Administration&#x27;</span>,<span class="hljs-number">1700</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> departments(department_id,department_name,location_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;Marketing&#x27;</span>,<span class="hljs-number">1800</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> departments(department_id,department_name,location_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">3</span>,<span class="hljs-string">&#x27;Purchasing&#x27;</span>,<span class="hljs-number">1700</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> departments(department_id,department_name,location_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">4</span>,<span class="hljs-string">&#x27;Human Resources&#x27;</span>,<span class="hljs-number">2400</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> departments(department_id,department_name,location_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">5</span>,<span class="hljs-string">&#x27;Shipping&#x27;</span>,<span class="hljs-number">1500</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> departments(department_id,department_name,location_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">6</span>,<span class="hljs-string">&#x27;IT&#x27;</span>,<span class="hljs-number">1400</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> departments(department_id,department_name,location_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">7</span>,<span class="hljs-string">&#x27;Public Relations&#x27;</span>,<span class="hljs-number">2700</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> departments(department_id,department_name,location_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">8</span>,<span class="hljs-string">&#x27;Sales&#x27;</span>,<span class="hljs-number">2500</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> departments(department_id,department_name,location_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">9</span>,<span class="hljs-string">&#x27;Executive&#x27;</span>,<span class="hljs-number">1700</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> departments(department_id,department_name,location_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">10</span>,<span class="hljs-string">&#x27;Finance&#x27;</span>,<span class="hljs-number">1700</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> departments(department_id,department_name,location_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">11</span>,<span class="hljs-string">&#x27;Accounting&#x27;</span>,<span class="hljs-number">1700</span>);
+
+
+
+<span class="hljs-comment">/*Data for the table employees */</span>
+
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">100</span>,<span class="hljs-string">&#x27;Steven&#x27;</span>,<span class="hljs-string">&#x27;King&#x27;</span>,<span class="hljs-string">&#x27;steven.king@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;515.123.4567&#x27;</span>,<span class="hljs-string">&#x27;1987-06-17&#x27;</span>,<span class="hljs-number">4</span>,<span class="hljs-number">24000.00</span>,<span class="hljs-keyword">NULL</span>,<span class="hljs-number">9</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">101</span>,<span class="hljs-string">&#x27;Neena&#x27;</span>,<span class="hljs-string">&#x27;Kochhar&#x27;</span>,<span class="hljs-string">&#x27;neena.kochhar@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;515.123.4568&#x27;</span>,<span class="hljs-string">&#x27;1989-09-21&#x27;</span>,<span class="hljs-number">5</span>,<span class="hljs-number">17000.00</span>,<span class="hljs-number">100</span>,<span class="hljs-number">9</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">102</span>,<span class="hljs-string">&#x27;Lex&#x27;</span>,<span class="hljs-string">&#x27;De Haan&#x27;</span>,<span class="hljs-string">&#x27;lex.de haan@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;515.123.4569&#x27;</span>,<span class="hljs-string">&#x27;1993-01-13&#x27;</span>,<span class="hljs-number">5</span>,<span class="hljs-number">17000.00</span>,<span class="hljs-number">100</span>,<span class="hljs-number">9</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">103</span>,<span class="hljs-string">&#x27;Alexander&#x27;</span>,<span class="hljs-string">&#x27;Hunold&#x27;</span>,<span class="hljs-string">&#x27;alexander.hunold@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;590.423.4567&#x27;</span>,<span class="hljs-string">&#x27;1990-01-03&#x27;</span>,<span class="hljs-number">9</span>,<span class="hljs-number">9000.00</span>,<span class="hljs-number">102</span>,<span class="hljs-number">6</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">104</span>,<span class="hljs-string">&#x27;Bruce&#x27;</span>,<span class="hljs-string">&#x27;Ernst&#x27;</span>,<span class="hljs-string">&#x27;bruce.ernst@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;590.423.4568&#x27;</span>,<span class="hljs-string">&#x27;1991-05-21&#x27;</span>,<span class="hljs-number">9</span>,<span class="hljs-number">6000.00</span>,<span class="hljs-number">103</span>,<span class="hljs-number">6</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">105</span>,<span class="hljs-string">&#x27;David&#x27;</span>,<span class="hljs-string">&#x27;Austin&#x27;</span>,<span class="hljs-string">&#x27;david.austin@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;590.423.4569&#x27;</span>,<span class="hljs-string">&#x27;1997-06-25&#x27;</span>,<span class="hljs-number">9</span>,<span class="hljs-number">4800.00</span>,<span class="hljs-number">103</span>,<span class="hljs-number">6</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">106</span>,<span class="hljs-string">&#x27;Valli&#x27;</span>,<span class="hljs-string">&#x27;Pataballa&#x27;</span>,<span class="hljs-string">&#x27;valli.pataballa@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;590.423.4560&#x27;</span>,<span class="hljs-string">&#x27;1998-02-05&#x27;</span>,<span class="hljs-number">9</span>,<span class="hljs-number">4800.00</span>,<span class="hljs-number">103</span>,<span class="hljs-number">6</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">107</span>,<span class="hljs-string">&#x27;Diana&#x27;</span>,<span class="hljs-string">&#x27;Lorentz&#x27;</span>,<span class="hljs-string">&#x27;diana.lorentz@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;590.423.5567&#x27;</span>,<span class="hljs-string">&#x27;1999-02-07&#x27;</span>,<span class="hljs-number">9</span>,<span class="hljs-number">4200.00</span>,<span class="hljs-number">103</span>,<span class="hljs-number">6</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">108</span>,<span class="hljs-string">&#x27;Nancy&#x27;</span>,<span class="hljs-string">&#x27;Greenberg&#x27;</span>,<span class="hljs-string">&#x27;nancy.greenberg@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;515.124.4569&#x27;</span>,<span class="hljs-string">&#x27;1994-08-17&#x27;</span>,<span class="hljs-number">7</span>,<span class="hljs-number">12000.00</span>,<span class="hljs-number">101</span>,<span class="hljs-number">10</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">109</span>,<span class="hljs-string">&#x27;Daniel&#x27;</span>,<span class="hljs-string">&#x27;Faviet&#x27;</span>,<span class="hljs-string">&#x27;daniel.faviet@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;515.124.4169&#x27;</span>,<span class="hljs-string">&#x27;1994-08-16&#x27;</span>,<span class="hljs-number">6</span>,<span class="hljs-number">9000.00</span>,<span class="hljs-number">108</span>,<span class="hljs-number">10</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">110</span>,<span class="hljs-string">&#x27;John&#x27;</span>,<span class="hljs-string">&#x27;Chen&#x27;</span>,<span class="hljs-string">&#x27;john.chen@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;515.124.4269&#x27;</span>,<span class="hljs-string">&#x27;1997-09-28&#x27;</span>,<span class="hljs-number">6</span>,<span class="hljs-number">8200.00</span>,<span class="hljs-number">108</span>,<span class="hljs-number">10</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">111</span>,<span class="hljs-string">&#x27;Ismael&#x27;</span>,<span class="hljs-string">&#x27;Sciarra&#x27;</span>,<span class="hljs-string">&#x27;ismael.sciarra@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;515.124.4369&#x27;</span>,<span class="hljs-string">&#x27;1997-09-30&#x27;</span>,<span class="hljs-number">6</span>,<span class="hljs-number">7700.00</span>,<span class="hljs-number">108</span>,<span class="hljs-number">10</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">112</span>,<span class="hljs-string">&#x27;Jose Manuel&#x27;</span>,<span class="hljs-string">&#x27;Urman&#x27;</span>,<span class="hljs-string">&#x27;jose manuel.urman@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;515.124.4469&#x27;</span>,<span class="hljs-string">&#x27;1998-03-07&#x27;</span>,<span class="hljs-number">6</span>,<span class="hljs-number">7800.00</span>,<span class="hljs-number">108</span>,<span class="hljs-number">10</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">113</span>,<span class="hljs-string">&#x27;Luis&#x27;</span>,<span class="hljs-string">&#x27;Popp&#x27;</span>,<span class="hljs-string">&#x27;luis.popp@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;515.124.4567&#x27;</span>,<span class="hljs-string">&#x27;1999-12-07&#x27;</span>,<span class="hljs-number">6</span>,<span class="hljs-number">6900.00</span>,<span class="hljs-number">108</span>,<span class="hljs-number">10</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">114</span>,<span class="hljs-string">&#x27;Den&#x27;</span>,<span class="hljs-string">&#x27;Raphaely&#x27;</span>,<span class="hljs-string">&#x27;den.raphaely@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;515.127.4561&#x27;</span>,<span class="hljs-string">&#x27;1994-12-07&#x27;</span>,<span class="hljs-number">14</span>,<span class="hljs-number">11000.00</span>,<span class="hljs-number">100</span>,<span class="hljs-number">3</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">115</span>,<span class="hljs-string">&#x27;Alexander&#x27;</span>,<span class="hljs-string">&#x27;Khoo&#x27;</span>,<span class="hljs-string">&#x27;alexander.khoo@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;515.127.4562&#x27;</span>,<span class="hljs-string">&#x27;1995-05-18&#x27;</span>,<span class="hljs-number">13</span>,<span class="hljs-number">3100.00</span>,<span class="hljs-number">114</span>,<span class="hljs-number">3</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">116</span>,<span class="hljs-string">&#x27;Shelli&#x27;</span>,<span class="hljs-string">&#x27;Baida&#x27;</span>,<span class="hljs-string">&#x27;shelli.baida@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;515.127.4563&#x27;</span>,<span class="hljs-string">&#x27;1997-12-24&#x27;</span>,<span class="hljs-number">13</span>,<span class="hljs-number">2900.00</span>,<span class="hljs-number">114</span>,<span class="hljs-number">3</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">117</span>,<span class="hljs-string">&#x27;Sigal&#x27;</span>,<span class="hljs-string">&#x27;Tobias&#x27;</span>,<span class="hljs-string">&#x27;sigal.tobias@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;515.127.4564&#x27;</span>,<span class="hljs-string">&#x27;1997-07-24&#x27;</span>,<span class="hljs-number">13</span>,<span class="hljs-number">2800.00</span>,<span class="hljs-number">114</span>,<span class="hljs-number">3</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">118</span>,<span class="hljs-string">&#x27;Guy&#x27;</span>,<span class="hljs-string">&#x27;Himuro&#x27;</span>,<span class="hljs-string">&#x27;guy.himuro@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;515.127.4565&#x27;</span>,<span class="hljs-string">&#x27;1998-11-15&#x27;</span>,<span class="hljs-number">13</span>,<span class="hljs-number">2600.00</span>,<span class="hljs-number">114</span>,<span class="hljs-number">3</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">119</span>,<span class="hljs-string">&#x27;Karen&#x27;</span>,<span class="hljs-string">&#x27;Colmenares&#x27;</span>,<span class="hljs-string">&#x27;karen.colmenares@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;515.127.4566&#x27;</span>,<span class="hljs-string">&#x27;1999-08-10&#x27;</span>,<span class="hljs-number">13</span>,<span class="hljs-number">2500.00</span>,<span class="hljs-number">114</span>,<span class="hljs-number">3</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">120</span>,<span class="hljs-string">&#x27;Matthew&#x27;</span>,<span class="hljs-string">&#x27;Weiss&#x27;</span>,<span class="hljs-string">&#x27;matthew.weiss@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;650.123.1234&#x27;</span>,<span class="hljs-string">&#x27;1996-07-18&#x27;</span>,<span class="hljs-number">19</span>,<span class="hljs-number">8000.00</span>,<span class="hljs-number">100</span>,<span class="hljs-number">5</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">121</span>,<span class="hljs-string">&#x27;Adam&#x27;</span>,<span class="hljs-string">&#x27;Fripp&#x27;</span>,<span class="hljs-string">&#x27;adam.fripp@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;650.123.2234&#x27;</span>,<span class="hljs-string">&#x27;1997-04-10&#x27;</span>,<span class="hljs-number">19</span>,<span class="hljs-number">8200.00</span>,<span class="hljs-number">100</span>,<span class="hljs-number">5</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">122</span>,<span class="hljs-string">&#x27;Payam&#x27;</span>,<span class="hljs-string">&#x27;Kaufling&#x27;</span>,<span class="hljs-string">&#x27;payam.kaufling@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;650.123.3234&#x27;</span>,<span class="hljs-string">&#x27;1995-05-01&#x27;</span>,<span class="hljs-number">19</span>,<span class="hljs-number">7900.00</span>,<span class="hljs-number">100</span>,<span class="hljs-number">5</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">123</span>,<span class="hljs-string">&#x27;Shanta&#x27;</span>,<span class="hljs-string">&#x27;Vollman&#x27;</span>,<span class="hljs-string">&#x27;shanta.vollman@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;650.123.4234&#x27;</span>,<span class="hljs-string">&#x27;1997-10-10&#x27;</span>,<span class="hljs-number">19</span>,<span class="hljs-number">6500.00</span>,<span class="hljs-number">100</span>,<span class="hljs-number">5</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">126</span>,<span class="hljs-string">&#x27;Irene&#x27;</span>,<span class="hljs-string">&#x27;Mikkilineni&#x27;</span>,<span class="hljs-string">&#x27;irene.mikkilineni@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;650.124.1224&#x27;</span>,<span class="hljs-string">&#x27;1998-09-28&#x27;</span>,<span class="hljs-number">18</span>,<span class="hljs-number">2700.00</span>,<span class="hljs-number">120</span>,<span class="hljs-number">5</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">145</span>,<span class="hljs-string">&#x27;John&#x27;</span>,<span class="hljs-string">&#x27;Russell&#x27;</span>,<span class="hljs-string">&#x27;john.russell@sqltutorial.org&#x27;</span>,<span class="hljs-keyword">NULL</span>,<span class="hljs-string">&#x27;1996-10-01&#x27;</span>,<span class="hljs-number">15</span>,<span class="hljs-number">14000.00</span>,<span class="hljs-number">100</span>,<span class="hljs-number">8</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">146</span>,<span class="hljs-string">&#x27;Karen&#x27;</span>,<span class="hljs-string">&#x27;Partners&#x27;</span>,<span class="hljs-string">&#x27;karen.partners@sqltutorial.org&#x27;</span>,<span class="hljs-keyword">NULL</span>,<span class="hljs-string">&#x27;1997-01-05&#x27;</span>,<span class="hljs-number">15</span>,<span class="hljs-number">13500.00</span>,<span class="hljs-number">100</span>,<span class="hljs-number">8</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">176</span>,<span class="hljs-string">&#x27;Jonathon&#x27;</span>,<span class="hljs-string">&#x27;Taylor&#x27;</span>,<span class="hljs-string">&#x27;jonathon.taylor@sqltutorial.org&#x27;</span>,<span class="hljs-keyword">NULL</span>,<span class="hljs-string">&#x27;1998-03-24&#x27;</span>,<span class="hljs-number">16</span>,<span class="hljs-number">8600.00</span>,<span class="hljs-number">100</span>,<span class="hljs-number">8</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">177</span>,<span class="hljs-string">&#x27;Jack&#x27;</span>,<span class="hljs-string">&#x27;Livingston&#x27;</span>,<span class="hljs-string">&#x27;jack.livingston@sqltutorial.org&#x27;</span>,<span class="hljs-keyword">NULL</span>,<span class="hljs-string">&#x27;1998-04-23&#x27;</span>,<span class="hljs-number">16</span>,<span class="hljs-number">8400.00</span>,<span class="hljs-number">100</span>,<span class="hljs-number">8</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">178</span>,<span class="hljs-string">&#x27;Kimberely&#x27;</span>,<span class="hljs-string">&#x27;Grant&#x27;</span>,<span class="hljs-string">&#x27;kimberely.grant@sqltutorial.org&#x27;</span>,<span class="hljs-keyword">NULL</span>,<span class="hljs-string">&#x27;1999-05-24&#x27;</span>,<span class="hljs-number">16</span>,<span class="hljs-number">7000.00</span>,<span class="hljs-number">100</span>,<span class="hljs-number">8</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">179</span>,<span class="hljs-string">&#x27;Charles&#x27;</span>,<span class="hljs-string">&#x27;Johnson&#x27;</span>,<span class="hljs-string">&#x27;charles.johnson@sqltutorial.org&#x27;</span>,<span class="hljs-keyword">NULL</span>,<span class="hljs-string">&#x27;2000-01-04&#x27;</span>,<span class="hljs-number">16</span>,<span class="hljs-number">6200.00</span>,<span class="hljs-number">100</span>,<span class="hljs-number">8</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">192</span>,<span class="hljs-string">&#x27;Sarah&#x27;</span>,<span class="hljs-string">&#x27;Bell&#x27;</span>,<span class="hljs-string">&#x27;sarah.bell@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;650.501.1876&#x27;</span>,<span class="hljs-string">&#x27;1996-02-04&#x27;</span>,<span class="hljs-number">17</span>,<span class="hljs-number">4000.00</span>,<span class="hljs-number">123</span>,<span class="hljs-number">5</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">193</span>,<span class="hljs-string">&#x27;Britney&#x27;</span>,<span class="hljs-string">&#x27;Everett&#x27;</span>,<span class="hljs-string">&#x27;britney.everett@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;650.501.2876&#x27;</span>,<span class="hljs-string">&#x27;1997-03-03&#x27;</span>,<span class="hljs-number">17</span>,<span class="hljs-number">3900.00</span>,<span class="hljs-number">123</span>,<span class="hljs-number">5</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">200</span>,<span class="hljs-string">&#x27;Jennifer&#x27;</span>,<span class="hljs-string">&#x27;Whalen&#x27;</span>,<span class="hljs-string">&#x27;jennifer.whalen@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;515.123.4444&#x27;</span>,<span class="hljs-string">&#x27;1987-09-17&#x27;</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4400.00</span>,<span class="hljs-number">101</span>,<span class="hljs-number">1</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">201</span>,<span class="hljs-string">&#x27;Michael&#x27;</span>,<span class="hljs-string">&#x27;Hartstein&#x27;</span>,<span class="hljs-string">&#x27;michael.hartstein@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;515.123.5555&#x27;</span>,<span class="hljs-string">&#x27;1996-02-17&#x27;</span>,<span class="hljs-number">10</span>,<span class="hljs-number">13000.00</span>,<span class="hljs-number">100</span>,<span class="hljs-number">2</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">202</span>,<span class="hljs-string">&#x27;Pat&#x27;</span>,<span class="hljs-string">&#x27;Fay&#x27;</span>,<span class="hljs-string">&#x27;pat.fay@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;603.123.6666&#x27;</span>,<span class="hljs-string">&#x27;1997-08-17&#x27;</span>,<span class="hljs-number">11</span>,<span class="hljs-number">6000.00</span>,<span class="hljs-number">201</span>,<span class="hljs-number">2</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">203</span>,<span class="hljs-string">&#x27;Susan&#x27;</span>,<span class="hljs-string">&#x27;Mavris&#x27;</span>,<span class="hljs-string">&#x27;susan.mavris@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;515.123.7777&#x27;</span>,<span class="hljs-string">&#x27;1994-06-07&#x27;</span>,<span class="hljs-number">8</span>,<span class="hljs-number">6500.00</span>,<span class="hljs-number">101</span>,<span class="hljs-number">4</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">204</span>,<span class="hljs-string">&#x27;Hermann&#x27;</span>,<span class="hljs-string">&#x27;Baer&#x27;</span>,<span class="hljs-string">&#x27;hermann.baer@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;515.123.8888&#x27;</span>,<span class="hljs-string">&#x27;1994-06-07&#x27;</span>,<span class="hljs-number">12</span>,<span class="hljs-number">10000.00</span>,<span class="hljs-number">101</span>,<span class="hljs-number">7</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">205</span>,<span class="hljs-string">&#x27;Shelley&#x27;</span>,<span class="hljs-string">&#x27;Higgins&#x27;</span>,<span class="hljs-string">&#x27;shelley.higgins@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;515.123.8080&#x27;</span>,<span class="hljs-string">&#x27;1994-06-07&#x27;</span>,<span class="hljs-number">2</span>,<span class="hljs-number">12000.00</span>,<span class="hljs-number">101</span>,<span class="hljs-number">11</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> employees(employee_id,first_name,last_name,email,phone_number,hire_date,job_id,salary,manager_id,department_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">206</span>,<span class="hljs-string">&#x27;William&#x27;</span>,<span class="hljs-string">&#x27;Gietz&#x27;</span>,<span class="hljs-string">&#x27;william.gietz@sqltutorial.org&#x27;</span>,<span class="hljs-string">&#x27;515.123.8181&#x27;</span>,<span class="hljs-string">&#x27;1994-06-07&#x27;</span>,<span class="hljs-number">1</span>,<span class="hljs-number">8300.00</span>,<span class="hljs-number">205</span>,<span class="hljs-number">11</span>);
+
+
+<span class="hljs-comment">/*Data for the table dependents */</span>
+
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;Penelope&#x27;</span>,<span class="hljs-string">&#x27;Gietz&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">206</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;Nick&#x27;</span>,<span class="hljs-string">&#x27;Higgins&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">205</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">3</span>,<span class="hljs-string">&#x27;Ed&#x27;</span>,<span class="hljs-string">&#x27;Whalen&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">200</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">4</span>,<span class="hljs-string">&#x27;Jennifer&#x27;</span>,<span class="hljs-string">&#x27;King&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">100</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">5</span>,<span class="hljs-string">&#x27;Johnny&#x27;</span>,<span class="hljs-string">&#x27;Kochhar&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">101</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">6</span>,<span class="hljs-string">&#x27;Bette&#x27;</span>,<span class="hljs-string">&#x27;De Haan&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">102</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">7</span>,<span class="hljs-string">&#x27;Grace&#x27;</span>,<span class="hljs-string">&#x27;Faviet&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">109</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">8</span>,<span class="hljs-string">&#x27;Matthew&#x27;</span>,<span class="hljs-string">&#x27;Chen&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">110</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">9</span>,<span class="hljs-string">&#x27;Joe&#x27;</span>,<span class="hljs-string">&#x27;Sciarra&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">111</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">10</span>,<span class="hljs-string">&#x27;Christian&#x27;</span>,<span class="hljs-string">&#x27;Urman&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">112</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">11</span>,<span class="hljs-string">&#x27;Zero&#x27;</span>,<span class="hljs-string">&#x27;Popp&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">113</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">12</span>,<span class="hljs-string">&#x27;Karl&#x27;</span>,<span class="hljs-string">&#x27;Greenberg&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">108</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">13</span>,<span class="hljs-string">&#x27;Uma&#x27;</span>,<span class="hljs-string">&#x27;Mavris&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">203</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">14</span>,<span class="hljs-string">&#x27;Vivien&#x27;</span>,<span class="hljs-string">&#x27;Hunold&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">103</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">15</span>,<span class="hljs-string">&#x27;Cuba&#x27;</span>,<span class="hljs-string">&#x27;Ernst&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">104</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">16</span>,<span class="hljs-string">&#x27;Fred&#x27;</span>,<span class="hljs-string">&#x27;Austin&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">105</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">17</span>,<span class="hljs-string">&#x27;Helen&#x27;</span>,<span class="hljs-string">&#x27;Pataballa&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">106</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">18</span>,<span class="hljs-string">&#x27;Dan&#x27;</span>,<span class="hljs-string">&#x27;Lorentz&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">107</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">19</span>,<span class="hljs-string">&#x27;Bob&#x27;</span>,<span class="hljs-string">&#x27;Hartstein&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">201</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">20</span>,<span class="hljs-string">&#x27;Lucille&#x27;</span>,<span class="hljs-string">&#x27;Fay&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">202</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">21</span>,<span class="hljs-string">&#x27;Kirsten&#x27;</span>,<span class="hljs-string">&#x27;Baer&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">204</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">22</span>,<span class="hljs-string">&#x27;Elvis&#x27;</span>,<span class="hljs-string">&#x27;Khoo&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">115</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">23</span>,<span class="hljs-string">&#x27;Sandra&#x27;</span>,<span class="hljs-string">&#x27;Baida&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">116</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">24</span>,<span class="hljs-string">&#x27;Cameron&#x27;</span>,<span class="hljs-string">&#x27;Tobias&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">117</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">25</span>,<span class="hljs-string">&#x27;Kevin&#x27;</span>,<span class="hljs-string">&#x27;Himuro&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">118</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">26</span>,<span class="hljs-string">&#x27;Rip&#x27;</span>,<span class="hljs-string">&#x27;Colmenares&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">119</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">27</span>,<span class="hljs-string">&#x27;Julia&#x27;</span>,<span class="hljs-string">&#x27;Raphaely&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">114</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">28</span>,<span class="hljs-string">&#x27;Woody&#x27;</span>,<span class="hljs-string">&#x27;Russell&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">145</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">29</span>,<span class="hljs-string">&#x27;Alec&#x27;</span>,<span class="hljs-string">&#x27;Partners&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">146</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> dependents(dependent_id,first_name,last_name,relationship,employee_id) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">30</span>,<span class="hljs-string">&#x27;Sandra&#x27;</span>,<span class="hljs-string">&#x27;Taylor&#x27;</span>,<span class="hljs-string">&#x27;Child&#x27;</span>,<span class="hljs-number">176</span>);
+</code></pre>
+</div>
+<h3 id="-table-des-matières-1"><a href="#table-des-mati%C3%A8res">↑ Table des matières</a></h3>
+
+            
+            
+        </body>
+        </html>

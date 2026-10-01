@@ -1,0 +1,29 @@
+FROM docker.io/rockylinux/rockylinux:latest
+
+LABEL maintainer="fdurand2015@gmail.com"
+
+# Installer PostgreSQL 18
+RUN dnf -y install dnf-utils epel-release wget sudo && \
+    dnf -y install https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm && \
+    dnf -qy module disable postgresql && \
+    dnf -y install postgresql18 postgresql18-server postgresql18-contrib && \
+    dnf clean all
+
+# Créer le répertoire de données
+RUN mkdir -p /var/lib/pgsql/18/data && \
+    chown -R postgres:postgres /var/lib/pgsql && \
+    chmod 700 /var/lib/pgsql/18/data
+
+# Copier l'entrypoint
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Exposer le port PostgreSQL
+EXPOSE 5432
+
+# Utilisateur par défaut
+USER postgres
+
+# Lancer PostgreSQL au démarrage
+ENTRYPOINT ["/entrypoint.sh"]
+

@@ -1,0 +1,68 @@
+podman run --name postgres \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=admin \
+  -p 5436:5432 \
+  -v /home/durandf/postgres_data:/var/lib/postgresql:z \
+  -d docker.io/library/postgres:latest
+
+sudo chown -R durandf:durandf /home/durandf/postgres_data
+sudo chmod -R 755 /home/durandf/postgres_data
+
+cd /home/durandf/postgres_data/18/docker
+
+apt update && apt upgrade -y && apt install vim -y
+
+👉 postgresql.conf :
+vi +/listen_addresses /var/lib/postgresql/18/docker/postgresql.conf
+
+listen_addresses = '*'
+port = 5432
+
+👉 pg_hba.conf
+vi +'/IPv4 local connections:' /var/lib/postgresql/18/docker/pg_hba.conf
+                
+host    all     all     0.0.0.0/0     md5
+
+
+Sous wsl2:
+psql -h 127.0.0.1 -U postgres -p 5436
+
+
+
+
+1. Création de la base employe
+CREATE DATABASE employe
+    WITH 
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'en_US.UTF-8'
+    LC_CTYPE = 'en_US.UTF-8'
+    TEMPLATE = template0;
+
+2. Création de la table employe	
+CREATE TABLE public.employe (
+    id_employe SERIAL PRIMARY KEY,
+    nom_employe VARCHAR(100) NOT NULL,
+    prenom_employe VARCHAR(100) NOT NULL,
+    age_employe INT,
+    departement_id INT,
+    salaire_employe NUMERIC(10,2)
+);
+
+3. INSERT INTO public.employe (nom_employe, prenom_employe, age_employe, departement_id, salaire_employe)
+VALUES
+('Durand', 'François', 35, 1, 45000.00),
+('Martin', 'Sophie', 29, 2, 38000.50),
+('Bernard', 'Luc', 42, 1, 52000.00),
+('Moreau', 'Claire', 31, 3, 41000.75);
+
+
+Set-PgToolsPath "C:\Program Files\PostgreSQL\16\bin"
+
+Backup-PgDatabase -Database mydb -Output "C:\Backup\mydb_$(Get-Date -f yyyyMMdd).dump"
+
+Backup-PgDatabase -Database mydb -Output "C:\Backup\mydb.sql" -Format sql
+
+Restore-PgDatabase -Database mydb -Input "C:\Backup\mydb.sql"
+
+docker exec pg-container pg_dump -U postgres mydb > ./mydb.dump

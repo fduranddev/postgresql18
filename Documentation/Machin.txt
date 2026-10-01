@@ -1,0 +1,41 @@
+podman run -dt \
+  --name pg18 \
+  -e POSTGRES_PASSWORD=postgres \
+  -p 5432:5432 \
+  -v ~/pgdata:/var/lib/postgresql/data \
+  postgres:18
+  
+  
+ sudo podman run -dt --name pg18
+  -e POSTGRES_PASSWORD=admin \
+  -e POSTGRES_USER=postgres \
+  -e PGDATA=/var/lib/postgresql/18/docker \
+  -p 5432:5432 \
+  -v pgdata:/var/lib/postgresql/18/docker \
+  postgres:18
+ 
+ 
+ sudo podman run -dt --name pg18 \
+  -e POSTGRES_PASSWORD=admin \
+  -e POSTGRES_USER=postgres \
+  -e PGDATA=/var/lib/postgresql/18/docker \
+  -p 5433:5432 \
+  -v pgdata:/var/lib/postgresql/18/docker \
+  docker.io/postgres:18
+  
+  
+  
+  sudo podman run -dt --name pg18 \
+  -e POSTGRES_PASSWORD=admin \
+  -e POSTGRES_USER=postgres \
+  -e PGDATA=/var/lib/postgresql/18/docker \
+  -p 5433:5432 \
+  -v pgdata:/var/lib/postgresql/18/docker \
+  -d docker.io/postgres:18
+  
+Error: error creating container storage: the container name "pg18" is already in use by "b9d3e196036dfeee9c16e32eb1d0365ccc2b8ffefaf3144fc3e0366c6713bef2". You have to remove that container to be able to reuse that name.: that name is already in use
+durandf:~$ podman rm -f pg18
+Error: no container with name or ID "pg18" found: no such container
+
+
+https://trino.io/slack
